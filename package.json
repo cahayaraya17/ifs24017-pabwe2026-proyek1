@@ -1,0 +1,17 @@
+{
+  "name": "campuspulse",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install --prefix client && npm install --prefix server",
+    "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "build": "npm run build --prefix client",
+    "test": "npm test --prefix server",
+    "db:seed": "npm run db:seed --prefix server",
+    "test:client": "npm run test:coverage --prefix client",
+    "test:all": "npm run test --prefix server && npm run test:client"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

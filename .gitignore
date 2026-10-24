@@ -1,0 +1,15 @@
+node_modules/
+client/node_modules/
+server/node_modules/
+client/dist/
+server/data/
+server/.env
+.env
+.DS_Store
+*.log
+coverage/
+client/coverage/
+*.lcov
+*.bak
+*.error-backup
+dashboard-test-errors.txt
