@@ -37,7 +37,7 @@ export default function HomePage() {
         <Link to="/map" className="floating-label label-top map-cta"><span className="live-indicator"/> Happening on campus <ArrowRight size={14}/></Link>
         <Link to="/map" className="visual-card visual-card-main map-visual-link" aria-label="Buka peta kampus">
           <div className="visual-card-top"><span className="tiny-tag">FEATURED EVENT</span><span className="visual-date">CAMPUS LIFE</span></div>
-          <div className="visual-illustration campus-photo-frame"><img className="campus-hero-photo" src="/images/itdel-campus-aerial.png" alt="Pemandangan area kampus Institut Teknologi Del dari udara"/><div className="campus-photo-overlay"/><span className="campus-photo-caption"><span className="live-indicator"/> INSTITUT TEKNOLOGI DEL</span></div>
+          <div className="visual-illustration campus-photo-frame"><img className="campus-hero-photo" src="/images/itdel-campus-aerial.webp" alt="Pemandangan area kampus Institut Teknologi Del dari udara"/><div className="campus-photo-overlay"/><span className="campus-photo-caption"><span className="live-indicator"/> INSTITUT TEKNOLOGI DEL</span></div>
           <div className="visual-card-copy"><div><span className="muted small">SITOLUAMA · TOBA · SUMATERA UTARA</span><h3>Our campus, our stories.</h3></div><span className="visual-arrow"><ArrowRight size={18}/></span></div>
         </Link>
         <div className="floating-label label-bottom"><span className="floating-icon"><Users size={16}/></span><span><strong>Find your people</strong><small>Communities that inspire</small></span></div>
