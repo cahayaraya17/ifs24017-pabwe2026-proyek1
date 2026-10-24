@@ -14,7 +14,7 @@ const CampusMapPage=lazy(()=>import('./pages/CampusMapPage'));
 const AUTH_ROUTES=[['/login','login'],['/register','register'],['/auth/login','login'],['/auth/register','register']];
 
 function BootScreen(){
-  return <div className="boot-screen"><span className="brand-mark"><span className="pulse-dot"/></span><h1>Preparing your campus...</h1></div>;
+  return <main className="boot-screen"><span className="brand-mark"><span className="pulse-dot"/></span><h1>Preparing your campus...</h1></main>;
 }
 function RequireAuth({user,children,roles}) {
   const location=useLocation();

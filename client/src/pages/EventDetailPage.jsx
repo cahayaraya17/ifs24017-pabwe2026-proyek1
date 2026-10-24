@@ -17,8 +17,8 @@ export default function EventDetailPage({ user }) {
     try { const result=await api(`/events/${id}/register`,{method:'POST'}); setMessage(result.message || 'Pendaftaran berhasil!'); setEvent(old=>({...old,registered_count:(old.registered_count||0)+1})); }
     catch(e){setError(e.message);} finally{setBusy(false);}
   }
-  if (!event && !error) return <main className="container page-pad"><div className="state-panel">Memuat detail acara...</div></main>;
-  if (error && !event) return <main className="container page-pad"><div className="state-panel error-state">{error}<p><Link to="/">Kembali</Link></p></div></main>;
+  if (!event && !error) return <main className="container page-pad"><h1 className="sr-only">Detail acara</h1><div className="state-panel">Memuat detail acara...</div></main>;
+  if (error && !event) return <main className="container page-pad"><h1 className="sr-only">Detail acara</h1><div className="state-panel error-state">{error}<p><Link to="/">Kembali</Link></p></div></main>;
   const date=new Date(event.start_at);
   return <main className="container detail-page">
     <Link to="/" className="back-link"><ArrowLeft size={16}/> Semua acara</Link>
