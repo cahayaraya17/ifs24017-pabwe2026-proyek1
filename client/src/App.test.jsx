@@ -80,6 +80,16 @@ describe('App', () => {
     expect(await screen.findByRole('heading', { name: 'Register Page' })).toBeInTheDocument();
   });
 
+  it('menampilkan halaman login ketika membuka /auth/login tanpa redirect', async () => {
+    renderApp('/auth/login');
+    expect(await screen.findByRole('heading', { name: 'Login Page' })).toBeInTheDocument();
+  });
+
+  it('menampilkan halaman register ketika membuka /auth/register tanpa redirect', async () => {
+    renderApp('/auth/register');
+    expect(await screen.findByRole('heading', { name: 'Register Page' })).toBeInTheDocument();
+  });
+
   it('menampilkan halaman detail acara', async () => {
     renderApp('/events/12');
     expect(await screen.findByRole('heading', { name: 'Event Detail Page' })).toBeInTheDocument();
