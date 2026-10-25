@@ -1,24 +1,13 @@
 const LOCALE = 'id-ID';
 
-export function parseDate(value) {
+/** Mengembalikan objek Date atau `null` bila nilai bukan tanggal yang valid. */
+export function toValidDate(value) {
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? null : date;
 }
 
-export function formatDay(date) {
-  return date.toLocaleDateString(LOCALE, { day: '2-digit' });
-}
-
-export function formatMonthShort(date) {
-  return date.toLocaleDateString(LOCALE, { month: 'short' }).toUpperCase();
-}
-
-export function formatDateShort(date) {
-  return date.toLocaleDateString(LOCALE, { day: 'numeric', month: 'short', year: 'numeric' });
-}
-
-export function formatDateLong(date) {
-  return date.toLocaleDateString(LOCALE, {
+export function formatLongDate(value) {
+  return new Date(value).toLocaleDateString(LOCALE, {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
@@ -26,18 +15,26 @@ export function formatDateLong(date) {
   });
 }
 
-export function formatTime(date) {
-  return date.toLocaleTimeString(LOCALE, { hour: '2-digit', minute: '2-digit' });
+export function formatShortDate(value) {
+  return new Date(value).toLocaleDateString(LOCALE);
+}
+
+export function formatTime(value) {
+  return new Date(value).toLocaleTimeString(LOCALE, { hour: '2-digit', minute: '2-digit' });
 }
 
 export function formatDateTime(value) {
   return new Date(value).toLocaleString(LOCALE, { dateStyle: 'medium', timeStyle: 'short' });
 }
 
-export function formatDateNumeric(value) {
-  return new Date(value).toLocaleDateString(LOCALE);
-}
+/** Bagian tanggal untuk kartu acara; memakai teks pengganti bila tanggal tidak valid. */
+export function getEventDateParts(value) {
+  const date = toValidDate(value);
+  if (!date) return { day: '—', month: '', label: 'Jadwal menyusul' };
 
-export function toInputDateTime(value) {
-  return value?.slice(0, 16) || '';
+  return {
+    day: date.toLocaleDateString(LOCALE, { day: '2-digit' }),
+    month: date.toLocaleDateString(LOCALE, { month: 'short' }).toUpperCase(),
+    label: date.toLocaleDateString(LOCALE, { day: 'numeric', month: 'short', year: 'numeric' }),
+  };
 }

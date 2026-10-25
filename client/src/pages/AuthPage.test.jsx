@@ -46,18 +46,6 @@ describe('AuthPage', () => {
     cleanup();
   });
 
-  it('menolak input tidak valid di sisi klien tanpa memanggil API', async () => {
-    const user = userEvent.setup();
-    renderAuth();
-
-    await user.type(document.getElementById('username'), 'bukan-email');
-    await user.type(document.getElementById('password'), 'password123');
-    await user.click(screen.getByRole('button', { name: 'Sign in' }));
-
-    expect(await screen.findByText('Format email tidak valid.')).toBeInTheDocument();
-    expect(api).not.toHaveBeenCalled();
-  });
-
   it('menampilkan halaman login dan pilihan akun demo', () => {
     renderAuth();
 
@@ -300,5 +288,41 @@ describe('AuthPage', () => {
     await waitFor(() => {
       expect(screen.queryByRole('button', { name: 'Memproses...' })).not.toBeInTheDocument();
     });
+  });
+  it('menolak nama yang terlalu pendek saat registrasi tanpa memanggil API', async () => {
+    const user = userEvent.setup();
+    renderAuth({ mode: 'register', initialEntry: '/register' });
+
+    await user.type(screen.getByLabelText('Nama lengkap'), 'A');
+    await user.type(screen.getByLabelText('Email kampus'), 'budi@example.com');
+    await user.type(screen.getByLabelText('Password'), 'password123');
+    await user.click(screen.getByRole('button', { name: 'Create account' }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('Nama minimal 2 karakter.');
+    expect(api).not.toHaveBeenCalled();
+  });
+
+  it('menolak format email yang tidak valid tanpa memanggil API', async () => {
+    const user = userEvent.setup();
+    renderAuth();
+
+    await user.type(screen.getByLabelText('Email kampus'), 'bukan-email');
+    await user.type(screen.getByLabelText('Password'), 'password123');
+    await user.click(screen.getByRole('button', { name: 'Sign in' }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('Format email tidak valid.');
+    expect(api).not.toHaveBeenCalled();
+  });
+
+  it('menolak password yang kurang dari 8 karakter tanpa memanggil API', async () => {
+    const user = userEvent.setup();
+    renderAuth();
+
+    await user.type(screen.getByLabelText('Email kampus'), 'budi@example.com');
+    await user.type(screen.getByLabelText('Password'), 'pendek');
+    await user.click(screen.getByRole('button', { name: 'Sign in' }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('Password minimal 8 karakter.');
+    expect(api).not.toHaveBeenCalled();
   });
 });

@@ -1,13 +1,27 @@
 import { Router } from 'express';
-import { listEvents, getEvent, createEvent, updateEvent, deleteEvent } from '../controllers/events.controller.js';
-import { requireAuth, allowRoles } from '../middleware/auth.js';
-import { eventRegistrations, registerForEvent } from '../controllers/registrations.controller.js';
+import {
+  createEvent,
+  deleteEvent,
+  getEvent,
+  listEvents,
+  updateEvent,
+} from '../controllers/event.controller.js';
+import { eventRegistrations, registerForEvent } from '../controllers/registration.controller.js';
+import { MANAGER_ROLES, ROLES } from '../constants/roles.js';
+import { allowRoles, optionalAuth, requireAuth } from '../middleware/auth.js';
+
 const router = Router();
-router.get('/', (req,res,next)=>{ if(req.headers.authorization?.startsWith('Bearer ')) return requireAuth(req,res,()=>listEvents(req,res)); return listEvents(req,res); });
-router.get('/:id', (req,res,next)=>{ if(req.headers.authorization?.startsWith('Bearer ')) return requireAuth(req,res,()=>getEvent(req,res)); return getEvent(req,res); });
-router.post('/', requireAuth, allowRoles('admin','organizer'), createEvent);
-router.patch('/:id', requireAuth, allowRoles('admin','organizer'), updateEvent);
-router.delete('/:id', requireAuth, allowRoles('admin','organizer'), deleteEvent);
-router.post('/:id/register', requireAuth, allowRoles('student'), registerForEvent);
-router.get('/:id/registrations', requireAuth, allowRoles('admin','organizer'), eventRegistrations);
+const managersOnly = [requireAuth, allowRoles(...MANAGER_ROLES)];
+
+// Publik: pengunjung melihat acara terbit, pengelola yang login juga bisa melihat draft miliknya.
+router.get('/', optionalAuth, listEvents);
+router.get('/:id', optionalAuth, getEvent);
+
+router.post('/', ...managersOnly, createEvent);
+router.patch('/:id', ...managersOnly, updateEvent);
+router.delete('/:id', ...managersOnly, deleteEvent);
+
+router.post('/:id/register', requireAuth, allowRoles(ROLES.STUDENT), registerForEvent);
+router.get('/:id/registrations', ...managersOnly, eventRegistrations);
+
 export default router;

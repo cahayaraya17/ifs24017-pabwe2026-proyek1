@@ -1,6 +1,6 @@
 import { Pencil, Trash2 } from 'lucide-react';
-import { formatDateNumeric } from '../../utils/date';
-import StatePanel from '../StatePanel';
+import StatePanel from '../common/StatePanel';
+import { formatShortDate } from '../../utils/date';
 
 function EventRow({ event, onEdit, onDelete }) {
   return (
@@ -11,7 +11,7 @@ function EventRow({ event, onEdit, onDelete }) {
           {event.category_name} · {event.location}
         </small>
       </td>
-      <td>{formatDateNumeric(event.start_at)}</td>
+      <td>{formatShortDate(event.start_at)}</td>
       <td>
         <span className={`status-badge status-${event.status}`}>{event.status}</span>
       </td>
@@ -20,10 +20,10 @@ function EventRow({ event, onEdit, onDelete }) {
       </td>
       <td>
         <div className="table-actions">
-          <button type="button" className="icon-button" title="Edit" aria-label={`Edit ${event.title}`} onClick={() => onEdit(event)}>
+          <button className="icon-button" title="Edit" onClick={() => onEdit(event)}>
             <Pencil size={16} />
           </button>
-          <button type="button" className="icon-button danger" title="Delete" aria-label={`Hapus ${event.title}`} onClick={() => onDelete(event.id)}>
+          <button className="icon-button danger" title="Delete" onClick={() => onDelete(event.id)}>
             <Trash2 size={16} />
           </button>
         </div>

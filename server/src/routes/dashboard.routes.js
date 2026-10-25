@@ -1,6 +1,10 @@
 import { Router } from 'express';
-import { requireAuth, allowRoles } from '../middleware/auth.js';
-import { dashboardStats } from '../controllers/registrations.controller.js';
+import { dashboardStats } from '../controllers/dashboard.controller.js';
+import { MANAGER_ROLES } from '../constants/roles.js';
+import { allowRoles, requireAuth } from '../middleware/auth.js';
+
 const router = Router();
-router.get('/stats', requireAuth, allowRoles('admin','organizer'), dashboardStats);
+
+router.get('/stats', requireAuth, allowRoles(...MANAGER_ROLES), dashboardStats);
+
 export default router;

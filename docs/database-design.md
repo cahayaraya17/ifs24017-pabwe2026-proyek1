@@ -1,6 +1,7 @@
 # Database
 
 Tables:
+
 - `users`: account and role (`student`, `organizer`, `admin`)
 - `categories`: event categories
 - `events`: event data, category and organizer foreign keys

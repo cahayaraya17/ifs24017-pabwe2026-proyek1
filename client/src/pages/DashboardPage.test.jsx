@@ -178,7 +178,7 @@ describe('DashboardPage', () => {
 
     await screen.findByText('Total events');
 
-    expect(screen.getAllByText('\u2014')).toHaveLength(3);
+    expect(screen.getAllByText('—')).toHaveLength(3);
   });
 
   it('membuka form pembuatan acara', async () => {
@@ -279,7 +279,7 @@ describe('DashboardPage', () => {
     expect(screen.queryByRole('heading', { name: 'Create an event' })).not.toBeInTheDocument();
 
     await openCreate(user);
-    await user.click(screen.getByRole('button', { name: 'Tutup formulir acara' }));
+    await user.click(screen.getByRole('button', { name: '' }));
 
     expect(screen.queryByRole('heading', { name: 'Create an event' })).not.toBeInTheDocument();
   });
@@ -347,7 +347,7 @@ describe('DashboardPage', () => {
     renderPage();
 
     await screen.findByText('Workshop React');
-    await user.click(screen.getByRole('button', { name: /^Edit/ }));
+    await user.click(screen.getByRole('button', { name: 'Edit' }));
 
     expect(screen.getByRole('heading', { name: 'Edit event' })).toBeInTheDocument();
 
@@ -360,7 +360,7 @@ describe('DashboardPage', () => {
     renderPage();
 
     await screen.findByText('Workshop React');
-    await user.click(screen.getByRole('button', { name: /^Edit/ }));
+    await user.click(screen.getByRole('button', { name: 'Edit' }));
 
     await user.clear(screen.getByLabelText('Judul acara'));
     await user.type(screen.getByLabelText('Judul acara'), 'Workshop Update');
@@ -389,7 +389,7 @@ describe('DashboardPage', () => {
     renderPage();
 
     await screen.findByText('Workshop React');
-    await user.click(screen.getByRole('button', { name: /^Edit/ }));
+    await user.click(screen.getByRole('button', { name: 'Edit' }));
 
     await user.clear(screen.getByLabelText('Judul acara'));
     await user.type(screen.getByLabelText('Judul acara'), 'Workshop Update');
@@ -405,7 +405,7 @@ describe('DashboardPage', () => {
     renderPage();
 
     await screen.findByText('Workshop React');
-    await user.click(screen.getByRole('button', { name: /^Hapus/ }));
+    await user.click(screen.getByRole('button', { name: 'Delete' }));
 
     expect(api).not.toHaveBeenCalledWith(
       '/events/7',
@@ -420,7 +420,7 @@ describe('DashboardPage', () => {
     renderPage();
 
     await screen.findByText('Workshop React');
-    await user.click(screen.getByRole('button', { name: /^Hapus/ }));
+    await user.click(screen.getByRole('button', { name: 'Delete' }));
 
     await waitFor(() => {
       expect(api).toHaveBeenCalledWith('/events/7', { method: 'DELETE' });
@@ -445,7 +445,7 @@ describe('DashboardPage', () => {
     renderPage();
 
     await screen.findByText('Workshop React');
-    await user.click(screen.getByRole('button', { name: /^Hapus/ }));
+    await user.click(screen.getByRole('button', { name: 'Delete' }));
 
     expect(await screen.findByText('Gagal menghapus acara')).toBeInTheDocument();
   });
@@ -515,7 +515,7 @@ describe('DashboardPage', () => {
     renderPage();
 
     await screen.findByText('Workshop React');
-    await user.click(screen.getByRole('button', { name: /^Edit/ }));
+    await user.click(screen.getByRole('button', { name: 'Edit' }));
 
     expect(screen.getByLabelText('Mulai')).toHaveValue('');
     expect(screen.getByLabelText('Selesai')).toHaveValue('');

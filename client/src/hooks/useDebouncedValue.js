@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 
-export function useDebouncedValue(value, delay = 300) {
+const DEFAULT_DELAY_MS = 300;
+
+/** Menunda pembaruan nilai sampai pengguna berhenti mengubahnya selama `delay` milidetik. */
+export function useDebouncedValue(value, delay = DEFAULT_DELAY_MS) {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {

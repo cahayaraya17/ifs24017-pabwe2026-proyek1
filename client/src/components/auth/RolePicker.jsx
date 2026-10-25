@@ -1,12 +1,14 @@
 import { CalendarDays, GraduationCap, ShieldCheck } from 'lucide-react';
+import { ROLES } from '../../constants/roles';
 
 const ROLE_OPTIONS = [
-  { role: 'student', label: 'Mahasiswa', icon: GraduationCap },
-  { role: 'organizer', label: 'Organizer', icon: CalendarDays },
-  { role: 'admin', label: 'Admin', icon: ShieldCheck },
+  { role: ROLES.STUDENT, label: 'Mahasiswa', icon: GraduationCap },
+  { role: ROLES.ORGANIZER, label: 'Organizer', icon: CalendarDays },
+  { role: ROLES.ADMIN, label: 'Admin', icon: ShieldCheck },
 ];
 
-export default function RolePicker({ selectedRole, onChoose }) {
+/** Pintasan untuk mengisi form login dengan akun demo sesuai peran. */
+export default function RolePicker({ selectedRole, onSelect }) {
   return (
     <div className="role-picker" aria-label="Pilih jenis akun">
       {ROLE_OPTIONS.map(({ role, label, icon: Icon }) => (
@@ -14,10 +16,9 @@ export default function RolePicker({ selectedRole, onChoose }) {
           key={role}
           type="button"
           className={selectedRole === role ? 'role-option selected' : 'role-option'}
-          aria-pressed={selectedRole === role}
-          onClick={() => onChoose(role)}
+          onClick={() => onSelect(role)}
         >
-          <Icon size={18} aria-hidden="true" />
+          <Icon size={18} />
           <span>{label}</span>
         </button>
       ))}

@@ -28,8 +28,8 @@ test('POST /api/auth/register creates a student account', async () => {
     body: JSON.stringify({
       name: 'Test Student',
       email: 'student-test@example.com',
-      password: 'StrongPass123!'
-    })
+      password: 'StrongPass123!',
+    }),
   });
 
   assert.equal(response.status, 201);
@@ -46,8 +46,8 @@ test('POST /api/auth/register rejects a duplicate email', async () => {
     body: JSON.stringify({
       name: 'Test Student',
       email: 'student-test@example.com',
-      password: 'StrongPass123!'
-    })
+      password: 'StrongPass123!',
+    }),
   });
 
   assert.equal(response.status, 409);
@@ -59,8 +59,8 @@ test('POST /api/auth/login rejects an incorrect password', async () => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       email: 'student-test@example.com',
-      password: 'WrongPassword123!'
-    })
+      password: 'WrongPassword123!',
+    }),
   });
 
   assert.equal(response.status, 401);
@@ -73,7 +73,7 @@ test('GET /api/auth/me rejects a request without a token', async () => {
 
 test.after(async () => {
   await new Promise((resolve, reject) => {
-    server.close(error => error ? reject(error) : resolve());
+    server.close((error) => (error ? reject(error) : resolve()));
   });
   db.close();
   fs.rmSync(tempDir, { recursive: true, force: true });

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
-import RegistrationItem from '../components/registrations/RegistrationItem';
-import StatePanel from '../components/StatePanel';
+import RegistrationItem from '../components/events/RegistrationItem';
+import StatePanel from '../components/common/StatePanel';
+import { ROUTES } from '../constants/routes';
 import { useMyRegistrations } from '../hooks/useMyRegistrations';
 
 export default function MyRegistrationsPage() {
@@ -21,15 +22,21 @@ export default function MyRegistrationsPage() {
           <p className="muted">Semua acara yang kamu ikuti ada di sini.</p>
         </div>
       </div>
+
       {error && <div className="form-error">{error}</div>}
+
       {items.length === 0 && !error ? (
         <StatePanel>
-          Kamu belum mendaftar acara. <Link to="/">Jelajahi acara</Link>
+          Kamu belum mendaftar acara. <Link to={ROUTES.HOME}>Jelajahi acara</Link>
         </StatePanel>
       ) : (
         <div className="registration-list">
-          {items.map((item) => (
-            <RegistrationItem key={item.id} registration={item} onCancel={handleCancel} />
+          {items.map((registration) => (
+            <RegistrationItem
+              key={registration.id}
+              registration={registration}
+              onCancel={handleCancel}
+            />
           ))}
         </div>
       )}

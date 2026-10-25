@@ -1,13 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
 import { cancelRegistration, listMyRegistrations } from '../services/registrationService';
 
+/** Daftar pendaftaran milik pengguna beserta aksi pembatalan. */
 export function useMyRegistrations() {
   const [items, setItems] = useState([]);
   const [error, setError] = useState('');
 
   const load = useCallback(async () => {
     try {
-      setItems(await listMyRegistrations());
+      const data = await listMyRegistrations();
+      setItems(data.registrations || []);
       setError('');
     } catch (err) {
       setError(err.message);
@@ -18,17 +20,14 @@ export function useMyRegistrations() {
     load();
   }, [load]);
 
-  const cancel = useCallback(
-    async (id) => {
-      try {
-        await cancelRegistration(id);
-        await load();
-      } catch (err) {
-        setError(err.message);
-      }
-    },
-    [load],
-  );
+  async function cancel(id) {
+    try {
+      await cancelRegistration(id);
+      await load();
+    } catch (err) {
+      setError(err.message);
+    }
+  }
 
   return { items, error, cancel };
 }

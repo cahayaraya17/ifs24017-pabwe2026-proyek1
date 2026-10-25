@@ -1,25 +1,26 @@
 import { api } from './api';
 
-export async function listEvents({ q = '', category = 'Semua' } = {}) {
-  const params = new URLSearchParams();
-  if (q.trim()) params.set('q', q.trim());
-  if (category !== 'Semua') params.set('category', category);
-  const data = await api(`/events?${params.toString()}`);
-  return data.events || [];
+export function listEvents(queryString) {
+  return api(`/events?${queryString}`);
 }
 
-export async function getEvent(id) {
-  const data = await api(`/events/${id}`);
-  return data.event;
+/** Daftar acara untuk pengelola, termasuk draft. */
+export function listManagedEvents() {
+  return api('/events?includeDrafts=true&limit=100');
+}
+
+export function getEvent(id) {
+  return api(`/events/${id}`);
 }
 
 export function registerForEvent(id) {
   return api(`/events/${id}/register`, { method: 'POST' });
 }
 
-export function saveEvent(payload, editingId = null) {
-  return api(editingId ? `/events/${editingId}` : '/events', {
-    method: editingId ? 'PATCH' : 'POST',
+/** Membuat acara baru, atau memperbarui acara bila `id` diberikan. */
+export function saveEvent(id, payload) {
+  return api(id ? `/events/${id}` : '/events', {
+    method: id ? 'PATCH' : 'POST',
     body: JSON.stringify(payload),
   });
 }

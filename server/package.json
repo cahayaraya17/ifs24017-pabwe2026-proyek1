@@ -7,11 +7,13 @@
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
     "db:seed": "node database/seeds/seed.js",
-    "test": "node --test"
+    "test": "node --test",
+    "test:coverage": "node -e \"require('node:fs').mkdirSync('coverage',{recursive:true})\" && node --test --experimental-test-coverage --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=coverage/lcov.info"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "better-sqlite3": "^11.7.0",
+    "campuspulse": "file:..",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",

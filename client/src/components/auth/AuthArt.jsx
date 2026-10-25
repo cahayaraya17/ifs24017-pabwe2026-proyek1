@@ -1,5 +1,6 @@
 import { Activity } from 'lucide-react';
 
+/** Panel ilustrasi di sisi kiri halaman login/registrasi. */
 export default function AuthArt() {
   return (
     <div className="auth-art campus-gate-art">
@@ -10,7 +11,7 @@ export default function AuthArt() {
         aria-hidden="true"
         width="330"
         height="413"
-        fetchPriority="high"
+        fetchpriority="high"
         decoding="async"
       />
       <div className="auth-water-ripple ripple-one" />

@@ -1,8 +1,7 @@
 import { api } from './api';
 
-export async function listMyRegistrations() {
-  const data = await api('/registrations/me');
-  return data.registrations || [];
+export function listMyRegistrations() {
+  return api('/registrations/me');
 }
 
 export function cancelRegistration(id) {

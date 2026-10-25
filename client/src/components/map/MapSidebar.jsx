@@ -1,11 +1,11 @@
 import { MapPin, Search } from 'lucide-react';
-import { MAP_FILTERS } from '../../constants';
+import { PLACE_KINDS } from '../../data/campusPlaces';
 
 export default function MapSidebar({
   query,
   onQueryChange,
-  filter,
-  onFilterChange,
+  kind,
+  onKindChange,
   places,
   selected,
   onSelect,
@@ -16,25 +16,28 @@ export default function MapSidebar({
         <Search size={17} />
         <input
           value={query}
-          onChange={(e) => onQueryChange(e.target.value)}
+          onChange={(event) => onQueryChange(event.target.value)}
           placeholder="Cari lokasi kampus..."
         />
       </div>
+
       <div className="map-filter-row">
-        {MAP_FILTERS.map((item) => (
+        {PLACE_KINDS.map((name) => (
           <button
-            key={item}
-            onClick={() => onFilterChange(item)}
-            className={filter === item ? 'filter-chip active' : 'filter-chip'}
+            key={name}
+            onClick={() => onKindChange(name)}
+            className={kind === name ? 'filter-chip active' : 'filter-chip'}
           >
-            {item}
+            {name}
           </button>
         ))}
       </div>
+
       <div className="map-location-heading">
         <strong>Lokasi utama</strong>
         <span>{places.length} lokasi</span>
       </div>
+
       <div className="map-place-list">
         {places.map((place) => (
           <button
@@ -53,6 +56,7 @@ export default function MapSidebar({
           </button>
         ))}
       </div>
+
       <div className="map-note">
         <strong>Catatan lokasi</strong>
         <p>

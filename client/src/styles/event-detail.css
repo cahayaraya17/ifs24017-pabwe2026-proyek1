@@ -1,0 +1,219 @@
+.detail-page {
+  padding-top: 18px;
+  padding-bottom: 80px;
+}
+.detail-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 34px;
+  align-items: start;
+}
+.detail-main {
+  min-width: 0;
+}
+.detail-art {
+  height: 275px;
+  border-radius: 17px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 27px;
+  background:
+    radial-gradient(circle at 70% 30%, #a78bfa8a, transparent 24%),
+    linear-gradient(135deg, #573e9f, #1e4c87);
+}
+.detail-art:before,
+.detail-art:after {
+  content: '';
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  border: 1px solid #ffffff25;
+  right: 4%;
+  top: -40%;
+  box-shadow:
+    0 0 0 28px #ffffff08,
+    0 0 0 56px #ffffff05;
+}
+.detail-art:after {
+  width: 190px;
+  height: 190px;
+  right: 15%;
+  top: 0;
+}
+.detail-art-shape {
+  position: absolute;
+  width: 190px;
+  height: 190px;
+  right: 16%;
+  bottom: -100px;
+  transform: rotate(45deg);
+  background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+  border-radius: 38px;
+  opacity: 0.7;
+}
+.detail-art-label {
+  position: absolute;
+  bottom: 23px;
+  left: 25px;
+  font:
+    600 12px 'Space Grotesk',
+    sans-serif;
+  letter-spacing: 2px;
+  color: #ffffffb8;
+}
+.detail-main h1 {
+  font:
+    600 clamp(30px, 4vw, 43px)/1.2 'Space Grotesk',
+    sans-serif;
+  letter-spacing: -1.4px;
+  margin: 13px 0;
+}
+.detail-description {
+  font-size: 13px;
+  color: #a3aec5;
+  line-height: 1.9;
+  white-space: pre-wrap;
+}
+.detail-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 17px;
+  margin-top: 30px;
+}
+.detail-info-grid > div {
+  display: flex;
+  align-items: start;
+  gap: 12px;
+  background: #111827;
+  border: 1px solid #253047;
+  border-radius: 12px;
+  padding: 16px;
+  color: #a78bfa;
+}
+.detail-info-grid span {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.detail-info-grid small {
+  font-size: 12px;
+  color: #8592ac;
+}
+.detail-info-grid strong {
+  font-size: 12px;
+  color: #e2e8f5;
+  overflow-wrap: anywhere;
+}
+.registration-panel {
+  margin-top: 60px;
+  border: 1px solid #34405c;
+  background: linear-gradient(145deg, #171c36, #111827);
+  border-radius: 16px;
+  padding: 22px;
+}
+.registration-panel h2 {
+  font:
+    600 24px 'Space Grotesk',
+    sans-serif;
+  margin: 13px 0 8px;
+}
+.registration-panel p {
+  font-size: 12px;
+  line-height: 1.8;
+}
+.capacity-bar {
+  height: 5px;
+  background: #28324a;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 23px 0 8px;
+}
+.capacity-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #8b5cf6, #3b82f6);
+}
+.panel-footnote {
+  display: block;
+  text-align: center;
+  margin-top: 12px;
+  font-size: 12px;
+}
+.registration-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.registration-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 17px;
+  border: 1px solid #27334b;
+  background: #111827;
+  border-radius: 13px;
+}
+.registration-icon {
+  width: 43px;
+  height: 43px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: #302455;
+  color: #b9a4ff;
+  flex-shrink: 0;
+}
+.registration-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+.registration-copy strong {
+  font-size: 13px;
+}
+.registration-copy span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #929db6;
+  font-size: 12px;
+}
+@media (max-width: 900px) {
+  .detail-layout {
+    grid-template-columns: 1fr 280px;
+    gap: 20px;
+  }
+}
+@media (max-width: 680px) {
+  .detail-layout {
+    grid-template-columns: 1fr;
+  }
+  .detail-art {
+    height: 210px;
+  }
+  .registration-panel {
+    margin-top: 0;
+  }
+  .detail-info-grid {
+    gap: 10px;
+  }
+  .detail-info-grid > div {
+    padding: 12px;
+    gap: 8px;
+  }
+  .registration-item {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .registration-copy {
+    min-width: calc(100% - 60px);
+  }
+  .registration-item > .status-badge {
+    margin-left: 53px;
+  }
+}

@@ -1,5 +1,60 @@
 import { ArrowRight, Sparkles, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { ROUTES } from '../../constants/routes';
+
+function HeroVisual() {
+  return (
+    <div className="hero-visual">
+      <div className="visual-glow" />
+      <Link to={ROUTES.MAP} className="floating-label label-top map-cta">
+        <span className="live-indicator" /> Happening on campus <ArrowRight size={14} />
+      </Link>
+
+      <Link
+        to={ROUTES.MAP}
+        className="visual-card visual-card-main map-visual-link"
+        aria-label="Buka peta kampus"
+      >
+        <div className="visual-card-top">
+          <span className="tiny-tag">FEATURED EVENT</span>
+          <span className="visual-date">CAMPUS LIFE</span>
+        </div>
+        <div className="visual-illustration campus-photo-frame">
+          <img
+            className="campus-hero-photo"
+            src="/images/itdel-campus-aerial.webp"
+            alt="Pemandangan area kampus Institut Teknologi Del dari udara"
+          />
+          <div className="campus-photo-overlay" />
+          <span className="campus-photo-caption">
+            <span className="live-indicator" /> INSTITUT TEKNOLOGI DEL
+          </span>
+        </div>
+        <div className="visual-card-copy">
+          <div>
+            <span className="muted small">SITOLUAMA · TOBA · SUMATERA UTARA</span>
+            <h3>Our campus, our stories.</h3>
+          </div>
+          <span className="visual-arrow">
+            <ArrowRight size={18} />
+          </span>
+        </div>
+      </Link>
+
+      <div className="floating-label label-bottom">
+        <span className="floating-icon">
+          <Users size={16} />
+        </span>
+        <span>
+          <strong>Find your people</strong>
+          <small>Communities that inspire</small>
+        </span>
+      </div>
+      <div className="decor decor-one">✳</div>
+      <div className="decor decor-two">✦</div>
+    </div>
+  );
+}
 
 export default function HeroSection() {
   return (
@@ -21,7 +76,7 @@ export default function HeroSection() {
           <a href="#discover" className="button">
             <Sparkles size={17} /> Explore events <ArrowRight size={17} />
           </a>
-          <Link to="/register" className="button button-ghost">
+          <Link to={ROUTES.REGISTER} className="button button-ghost">
             Join the community
           </Link>
         </div>
@@ -36,53 +91,7 @@ export default function HeroSection() {
           </span>
         </div>
       </div>
-      <div className="hero-visual">
-        <div className="visual-glow" />
-        <Link to="/map" className="floating-label label-top map-cta">
-          <span className="live-indicator" /> Happening on campus <ArrowRight size={14} />
-        </Link>
-        <Link
-          to="/map"
-          className="visual-card visual-card-main map-visual-link"
-          aria-label="Buka peta kampus"
-        >
-          <div className="visual-card-top">
-            <span className="tiny-tag">FEATURED EVENT</span>
-            <span className="visual-date">CAMPUS LIFE</span>
-          </div>
-          <div className="visual-illustration campus-photo-frame">
-            <img
-              className="campus-hero-photo"
-              src="/images/itdel-campus-aerial.webp"
-              alt="Pemandangan area kampus Institut Teknologi Del dari udara"
-            />
-            <div className="campus-photo-overlay" />
-            <span className="campus-photo-caption">
-              <span className="live-indicator" /> INSTITUT TEKNOLOGI DEL
-            </span>
-          </div>
-          <div className="visual-card-copy">
-            <div>
-              <span className="muted small">SITOLUAMA · TOBA · SUMATERA UTARA</span>
-              <h3>Our campus, our stories.</h3>
-            </div>
-            <span className="visual-arrow">
-              <ArrowRight size={18} />
-            </span>
-          </div>
-        </Link>
-        <div className="floating-label label-bottom">
-          <span className="floating-icon">
-            <Users size={16} />
-          </span>
-          <span>
-            <strong>Find your people</strong>
-            <small>Communities that inspire</small>
-          </span>
-        </div>
-        <div className="decor decor-one">✳</div>
-        <div className="decor decor-two">✦</div>
-      </div>
+      <HeroVisual />
     </section>
   );
 }

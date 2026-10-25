@@ -1,5 +1,8 @@
 import { Router } from 'express';
-import { db } from '../config/database.js';
+import { listCategories } from '../controllers/category.controller.js';
+
 const router = Router();
-router.get('/', (req,res)=>res.json({categories:db.prepare('SELECT * FROM categories ORDER BY name').all()}));
+
+router.get('/', listCategories);
+
 export default router;

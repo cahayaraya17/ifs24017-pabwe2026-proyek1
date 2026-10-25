@@ -23,17 +23,20 @@ await new Promise((resolve, reject) => {
 const baseUrl = `http://127.0.0.1:${server.address().port}`;
 
 const passwordHash = bcrypt.hashSync('TestPassword123!', 4);
-const insertUser = db.prepare(
-  'INSERT INTO users(name,email,password_hash,role) VALUES(?,?,?,?)'
-);
+const insertUser = db.prepare('INSERT INTO users(name,email,password_hash,role) VALUES(?,?,?,?)');
 const student = insertUser.run('Test Student', 'student@example.com', passwordHash, 'student');
-const organizer = insertUser.run('Test Organizer', 'organizer@example.com', passwordHash, 'organizer');
+const organizer = insertUser.run(
+  'Test Organizer',
+  'organizer@example.com',
+  passwordHash,
+  'organizer',
+);
 
 function tokenFor(id, role) {
   return jwt.default.sign(
     { id, role, email: `${role}@example.com`, name: role },
     process.env.JWT_SECRET,
-    { expiresIn: '5m' }
+    { expiresIn: '5m' },
   );
 }
 
@@ -41,7 +44,7 @@ test('POST /api/events rejects a request without a token', async () => {
   const response = await fetch(`${baseUrl}/api/events`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({})
+    body: JSON.stringify({}),
   });
   assert.equal(response.status, 401);
 });
@@ -51,9 +54,9 @@ test('POST /api/events rejects a student token', async () => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${tokenFor(student.lastInsertRowid, 'student')}`
+      Authorization: `Bearer ${tokenFor(student.lastInsertRowid, 'student')}`,
     },
-    body: JSON.stringify({})
+    body: JSON.stringify({}),
   });
   assert.equal(response.status, 403);
 });
@@ -63,9 +66,9 @@ test('POST /api/events allows an organizer through role checks but validates eve
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${tokenFor(organizer.lastInsertRowid, 'organizer')}`
+      Authorization: `Bearer ${tokenFor(organizer.lastInsertRowid, 'organizer')}`,
     },
-    body: JSON.stringify({})
+    body: JSON.stringify({}),
   });
   assert.equal(response.status, 400);
   const body = await response.json();
@@ -74,7 +77,7 @@ test('POST /api/events allows an organizer through role checks but validates eve
 
 test.after(async () => {
   await new Promise((resolve, reject) => {
-    server.close(error => error ? reject(error) : resolve());
+    server.close((error) => (error ? reject(error) : resolve()));
   });
   db.close();
   fs.rmSync(tempDir, { recursive: true, force: true });

@@ -1,24 +1,43 @@
-import jwt from 'jsonwebtoken';
+import { HttpError } from '../utils/httpError.js';
+import { verifyToken } from '../utils/token.js';
 
-export function requireAuth(req, res, next) {
+const BEARER_PREFIX = 'Bearer ';
+
+function extractBearerToken(req) {
   const header = req.headers.authorization || '';
-  const token = header.startsWith('Bearer ') ? header.slice(7) : null;
-  if (!token) return res.status(401).json({ error: 'Silakan login terlebih dahulu.' });
+  return header.startsWith(BEARER_PREFIX) ? header.slice(BEARER_PREFIX.length) : null;
+}
+
+function attachUser(req, token) {
   try {
-    const secret = process.env.JWT_SECRET;
-    if (!secret || secret.length < 24) throw new Error('JWT_SECRET belum dikonfigurasi dengan aman.');
-    req.user = jwt.verify(token, secret);
-    return next();
+    req.user = verifyToken(token);
   } catch {
-    return res.status(401).json({ error: 'Sesi tidak valid atau telah kedaluwarsa.' });
+    throw HttpError.unauthorized('Sesi tidak valid atau telah kedaluwarsa.');
   }
 }
 
+/** Mewajibkan token JWT yang valid. */
+export function requireAuth(req, res, next) {
+  const token = extractBearerToken(req);
+  if (!token) throw HttpError.unauthorized('Silakan login terlebih dahulu.');
+
+  attachUser(req, token);
+  next();
+}
+
+/** Token bersifat opsional, tetapi bila dikirim harus valid. */
+export function optionalAuth(req, res, next) {
+  const token = extractBearerToken(req);
+  if (token) attachUser(req, token);
+  next();
+}
+
+/** Membatasi akses berdasarkan peran pengguna. */
 export function allowRoles(...roles) {
   return (req, res, next) => {
     if (!req.user || !roles.includes(req.user.role)) {
-      return res.status(403).json({ error: 'Kamu tidak memiliki izin untuk tindakan ini.' });
+      throw HttpError.forbidden('Kamu tidak memiliki izin untuk tindakan ini.');
     }
-    return next();
+    next();
   };
 }

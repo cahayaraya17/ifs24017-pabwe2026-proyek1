@@ -1,19 +1,10 @@
-import { api, setToken } from './api';
+import { api } from './api';
 
-export async function authenticate(mode, credentials) {
-  const data = await api(`/auth/${mode}`, {
-    method: 'POST',
-    body: JSON.stringify(credentials),
-  });
-  setToken(data.token);
-  return data.user;
+export function fetchCurrentUser() {
+  return api('/auth/me');
 }
 
-export async function fetchCurrentUser() {
-  const data = await api('/auth/me');
-  return data.user;
-}
-
-export function logout() {
-  setToken(null);
+/** `mode` bernilai 'login' atau 'register'. */
+export function authenticate(mode, credentials) {
+  return api(`/auth/${mode}`, { method: 'POST', body: JSON.stringify(credentials) });
 }

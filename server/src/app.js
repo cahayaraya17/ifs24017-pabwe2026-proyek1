@@ -1,23 +1,33 @@
-import express from 'express';
 import cors from 'cors';
-import authRoutes from './routes/auth.routes.js';
-import eventRoutes from './routes/events.routes.js';
-import categoryRoutes from './routes/categories.routes.js';
-import registrationRoutes from './routes/registrations.routes.js';
-import dashboardRoutes from './routes/dashboard.routes.js';
-import { notFound, errorHandler } from './middleware/errorHandler.js';
+import express from 'express';
+import { config } from './config/env.js';
+import { errorHandler, notFound } from './middleware/errorHandler.js';
+import { securityHeaders } from './middleware/securityHeaders.js';
+import apiRoutes from './routes/index.js';
 
-export const app = express();
-const allowedOrigin = process.env.CLIENT_ORIGIN || 'http://localhost:5173';
-app.disable('x-powered-by');
-app.use(cors({ origin: allowedOrigin.split(',').map(v=>v.trim()), methods:['GET','POST','PATCH','DELETE','OPTIONS'], allowedHeaders:['Content-Type','Authorization'] }));
-app.use(express.json({ limit: '1mb' }));
-app.get('/api/health', (req,res)=>res.json({status:'ok',service:'CampusPulse API'}));
-app.use('/api/auth',authRoutes);
-app.use('/api/events',eventRoutes);
-app.use('/api/categories',categoryRoutes);
-app.use('/api/registrations',registrationRoutes);
-app.use('/api/dashboard',dashboardRoutes);
-app.use(notFound);
-app.use(errorHandler);
+export function createApp() {
+  const app = express();
+
+  app.disable('x-powered-by');
+  // Di balik proxy Vercel, alamat IP klien dibaca dari X-Forwarded-For (dipakai rate limiter).
+  if (config.isServerless) app.set('trust proxy', 1);
+  app.use(securityHeaders);
+  app.use(
+    cors({
+      origin: config.clientOrigins,
+      methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
+    }),
+  );
+  app.use(express.json({ limit: '1mb' }));
+
+  app.use('/api', apiRoutes);
+  app.use(notFound);
+  app.use(errorHandler);
+
+  return app;
+}
+
+export const app = createApp();
+
 export default app;

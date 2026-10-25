@@ -1,6 +1,19 @@
-import dotenv from 'dotenv';
-import path from 'node:path';
-dotenv.config({ path: path.resolve(process.cwd(), '.env') });
-const { app } = await import('./app.js');
-const port = Number(process.env.PORT || 4000);
-app.listen(port,()=>console.log(`CampusPulse API running on http://localhost:${port}`));
+import { assertConfig, config } from './config/env.js';
+import { db } from './config/database.js';
+import { app } from './app.js';
+
+assertConfig();
+
+const server = app.listen(config.port, () => {
+  console.log(`CampusPulse API running on http://localhost:${config.port}`);
+});
+
+function shutdown() {
+  server.close(() => {
+    db.close();
+    process.exit(0);
+  });
+}
+
+process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown);

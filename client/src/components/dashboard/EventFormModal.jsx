@@ -1,132 +1,94 @@
-import { useEffect, useRef } from 'react';
 import { Save, X } from 'lucide-react';
-
-const FOCUSABLE_SELECTOR =
-  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
-
-function Field({ label, className, children }) {
-  return (
-    <label className={className}>
-      {label}
-      {children}
-    </label>
-  );
-}
+import { EVENT_STATUS_OPTIONS } from '../../constants/events';
 
 export default function EventFormModal({
   form,
-  categories,
-  editing,
-  busy,
   onChange,
+  categories,
+  isEditing,
+  busy,
   onSubmit,
   onClose,
 }) {
-  const dialogRef = useRef(null);
-  const closeButtonRef = useRef(null);
-
-  useEffect(() => {
-    const previousFocus = document.activeElement;
-    closeButtonRef.current?.focus();
-
-    function handleKeyDown(event) {
-      if (event.key === 'Escape') {
-        event.preventDefault();
-        onClose();
-        return;
-      }
-
-      if (event.key !== 'Tab' || !dialogRef.current) return;
-      const focusable = Array.from(dialogRef.current.querySelectorAll(FOCUSABLE_SELECTOR));
-      if (focusable.length === 0) {
-        event.preventDefault();
-        return;
-      }
-
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    }
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      if (previousFocus instanceof HTMLElement) previousFocus.focus();
-    };
-  }, [onClose]);
-
-  const bind = (field) => ({
-    value: form[field],
-    onChange: (e) => onChange(field, e.target.value),
-  });
+  /** Membuat handler onChange untuk satu field form. */
+  const bind = (field) => (event) => onChange({ ...form, [field]: event.target.value });
 
   return (
     <div className="modal-backdrop">
-      <form
-        ref={dialogRef}
-        className="event-form-panel"
-        onSubmit={onSubmit}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="event-form-title"
-      >
+      <form className="event-form-panel" onSubmit={onSubmit}>
         <div className="form-panel-heading">
           <div>
             <span className="eyebrow">EVENT MANAGEMENT</span>
-            <h2 id="event-form-title">{editing ? 'Edit event' : 'Create an event'}</h2>
+            <h2>{isEditing ? 'Edit event' : 'Create an event'}</h2>
           </div>
-          <button
-            ref={closeButtonRef}
-            type="button"
-            className="icon-button"
-            onClick={onClose}
-            aria-label="Tutup formulir acara"
-          >
-            <X aria-hidden="true" />
+          <button type="button" className="icon-button" onClick={onClose}>
+            <X />
           </button>
         </div>
 
         <div className="form-grid">
-          <Field label="Judul acara" className="wide-field">
-            <input required minLength={3} {...bind('title')} />
-          </Field>
-          <Field label="Kategori">
-            <select {...bind('category_id')}>
+          <label className="wide-field">
+            Judul acara
+            <input required minLength={3} value={form.title} onChange={bind('title')} />
+          </label>
+
+          <label>
+            Kategori
+            <select value={form.category_id} onChange={bind('category_id')}>
               {categories.map((category) => (
                 <option key={category.id} value={category.id}>
                   {category.name}
                 </option>
               ))}
             </select>
-          </Field>
-          <Field label="Status">
-            <select {...bind('status')}>
-              <option value="draft">Draft</option>
-              <option value="published">Published</option>
-              <option value="cancelled">Cancelled</option>
+          </label>
+
+          <label>
+            Status
+            <select value={form.status} onChange={bind('status')}>
+              {EVENT_STATUS_OPTIONS.map(({ value, label }) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
             </select>
-          </Field>
-          <Field label="Deskripsi" className="wide-field">
-            <textarea rows="3" {...bind('description')} />
-          </Field>
-          <Field label="Lokasi">
-            <input required {...bind('location')} />
-          </Field>
-          <Field label="Kuota">
-            <input required type="number" min="1" {...bind('capacity')} />
-          </Field>
-          <Field label="Mulai">
-            <input required type="datetime-local" {...bind('start_at')} />
-          </Field>
-          <Field label="Selesai">
-            <input required type="datetime-local" {...bind('end_at')} />
-          </Field>
+          </label>
+
+          <label className="wide-field">
+            Deskripsi
+            <textarea rows="3" value={form.description} onChange={bind('description')} />
+          </label>
+
+          <label>
+            Lokasi
+            <input required value={form.location} onChange={bind('location')} />
+          </label>
+
+          <label>
+            Kuota
+            <input
+              required
+              type="number"
+              min="1"
+              value={form.capacity}
+              onChange={bind('capacity')}
+            />
+          </label>
+
+          <label>
+            Mulai
+            <input
+              required
+              type="datetime-local"
+              value={form.start_at}
+              onChange={bind('start_at')}
+            />
+          </label>
+
+          <label>
+            Selesai
+            <input required type="datetime-local" value={form.end_at} onChange={bind('end_at')} />
+          </label>
         </div>
 
         <div className="form-actions">
@@ -134,7 +96,7 @@ export default function EventFormModal({
             Cancel
           </button>
           <button className="button" disabled={busy}>
-            <Save size={16} aria-hidden="true" />
+            <Save size={16} />
             {busy ? 'Saving...' : 'Save event'}
           </button>
         </div>

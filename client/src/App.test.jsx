@@ -11,7 +11,7 @@ vi.mock('./services/api', () => ({
   setToken: vi.fn(),
 }));
 
-vi.mock('./components/Navbar', () => ({
+vi.mock('./components/layout/Navbar', () => ({
   default: ({ user }) => (
     <div>
       <span>Navbar</span>

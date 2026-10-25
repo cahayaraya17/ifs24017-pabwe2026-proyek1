@@ -8,7 +8,7 @@ vi.mock('../services/api', () => ({
   api: vi.fn(),
 }));
 
-vi.mock('../components/EventCard', () => ({
+vi.mock('../components/events/EventCard', () => ({
   default: ({ event }) => (
     <article data-testid="event-card">{event.title || event.name || `Event ${event.id}`}</article>
   ),
