@@ -20,3 +20,4 @@ app.use('/api/registrations',registrationRoutes);
 app.use('/api/dashboard',dashboardRoutes);
 app.use(notFound);
 app.use(errorHandler);
+export default app;
