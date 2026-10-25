@@ -9,6 +9,8 @@ export function createApp() {
   const app = express();
 
   app.disable('x-powered-by');
+  // Di balik proxy Vercel, alamat IP klien dibaca dari X-Forwarded-For (dipakai rate limiter).
+  if (config.isServerless) app.set('trust proxy', 1);
   app.use(securityHeaders);
   app.use(
     cors({
@@ -27,3 +29,5 @@ export function createApp() {
 }
 
 export const app = createApp();
+
+export default app;

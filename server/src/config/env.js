@@ -14,6 +14,8 @@ function toNumber(value, fallback) {
 /** Konfigurasi aplikasi yang dibaca sekali dari environment variables. */
 export const config = Object.freeze({
   port: toNumber(process.env.PORT, 4000),
+  /** True saat berjalan di Vercel: sistem berkas hanya /tmp yang bisa ditulis. */
+  isServerless: Boolean(process.env.VERCEL),
   dbPath: process.env.DB_PATH || '',
   clientOrigins: (process.env.CLIENT_ORIGIN || 'http://localhost:5173')
     .split(',')

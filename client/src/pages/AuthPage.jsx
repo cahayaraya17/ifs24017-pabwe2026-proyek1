@@ -9,6 +9,7 @@ import { MANAGER_ROLES, ROLES } from '../constants/roles';
 import { ROUTES } from '../constants/routes';
 import { setToken } from '../services/api';
 import { authenticate } from '../services/authService';
+import { validateAuthForm } from '../utils/validators';
 
 const COPY = {
   login: {
@@ -58,6 +59,13 @@ export default function AuthPage({ mode, onAuthChange }) {
   async function handleSubmit(event) {
     event.preventDefault();
     setError('');
+
+    const validationError = validateAuthForm({ name, email, password }, isRegister);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
     setBusy(true);
 
     try {
@@ -88,7 +96,7 @@ export default function AuthPage({ mode, onAuthChange }) {
 
           {!isRegister && <RolePicker selectedRole={selectedRole} onSelect={chooseDemoAccount} />}
 
-          <form onSubmit={handleSubmit} className="auth-form">
+          <form onSubmit={handleSubmit} className="auth-form" noValidate>
             {isRegister && (
               <AuthField
                 label="Nama lengkap"
@@ -98,6 +106,7 @@ export default function AuthPage({ mode, onAuthChange }) {
                 autoComplete="name"
                 required
                 minLength={2}
+                maxLength={100}
                 value={name}
                 onChange={(event) => setName(event.target.value)}
                 placeholder="Nama kamu"
@@ -109,8 +118,12 @@ export default function AuthPage({ mode, onAuthChange }) {
               id="username"
               name="username"
               autoComplete="username"
+              autoCapitalize="none"
+              autoCorrect="off"
+              inputMode="email"
               required
-              type="email"
+              type="text"
+              maxLength={190}
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               placeholder="nama@kampus.ac.id"
@@ -123,12 +136,17 @@ export default function AuthPage({ mode, onAuthChange }) {
               autoComplete={isRegister ? 'new-password' : 'current-password'}
               required
               minLength={8}
+              maxLength={100}
               type="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               placeholder="Minimal 8 karakter"
             />
-            {error && <div className="form-error">{error}</div>}
+            {error && (
+              <div className="form-error" role="alert">
+                {error}
+              </div>
+            )}
             <button id="btn-submit" type="submit" disabled={busy} className="button button-full">
               {busy ? 'Memproses...' : copy.submit}
             </button>

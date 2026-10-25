@@ -81,6 +81,15 @@ SQLite membutuhkan filesystem persisten. Jangan gunakan filesystem sementara yan
 
 Penjelasan pembagian lapisan dan konvensi penamaan ada di [docs/architecture.md](docs/architecture.md).
 
+## Deploy ke Vercel
+
+Frontend dan API berjalan dalam satu project Vercel (konfigurasi di `vercel.json`):
+
+- `api/index.mjs` meneruskan semua `/api/*` ke aplikasi Express di `server/src/app.js`.
+- Di Vercel, SQLite disimpan di `/tmp` dan data demo di-seed otomatis saat instance menyala (lihat `server/src/seed`).
+- Frontend memakai `VITE_API_URL=/api` dari `client/.env.production`.
+- Atur environment variable `JWT_SECRET` (minimal 24 karakter) dan `CLIENT_ORIGIN` di dashboard Vercel.
+
 ## Kualitas kode
 
 - `npm run format` merapikan kode dengan Prettier; `npm run format:check` memeriksanya.

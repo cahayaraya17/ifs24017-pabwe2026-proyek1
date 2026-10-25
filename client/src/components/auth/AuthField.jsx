@@ -4,7 +4,7 @@ export default function AuthField({ label, icon: Icon, ...inputProps }) {
     <label>
       {label}
       <div className="input-with-icon">
-        <Icon size={17} />
+        <Icon size={17} aria-hidden="true" />
         <input {...inputProps} />
       </div>
     </label>

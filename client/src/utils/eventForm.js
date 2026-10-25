@@ -1,4 +1,5 @@
 import { EVENT_STATUS } from '../constants/events';
+import { validateEventForm } from './validators';
 
 const DATETIME_LOCAL_LENGTH = 16;
 const DEFAULT_CATEGORY_ID = 1;
@@ -29,21 +30,16 @@ export function toEventFormValues(event) {
 
 /** Memvalidasi form dan membentuk payload API. Melempar Error berisi pesan untuk pengguna. */
 export function buildEventPayload(form) {
-  if (!form.start_at || !form.end_at) {
-    throw new Error('Tanggal mulai dan selesai wajib diisi.');
-  }
-
-  const startDate = new Date(form.start_at);
-  const endDate = new Date(form.end_at);
-  if (endDate <= startDate) {
-    throw new Error('Tanggal selesai harus setelah tanggal mulai.');
-  }
+  const validationError = validateEventForm(form);
+  if (validationError) throw new Error(validationError);
 
   return {
     ...form,
+    title: form.title.trim(),
+    location: form.location.trim(),
     capacity: Number(form.capacity),
     category_id: Number(form.category_id),
-    start_at: startDate.toISOString(),
-    end_at: endDate.toISOString(),
+    start_at: new Date(form.start_at).toISOString(),
+    end_at: new Date(form.end_at).toISOString(),
   };
 }
