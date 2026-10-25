@@ -1,5 +1,6 @@
 import { ArrowRight } from 'lucide-react';
 import { useState } from 'react';
+import { useDebouncedValue } from '../hooks/useDebouncedValue';
 import { Link } from 'react-router-dom';
 import EventList from '../components/home/EventList';
 import EventToolbar from '../components/home/EventToolbar';
@@ -11,7 +12,8 @@ import { useEvents } from '../hooks/useEvents';
 export default function HomePage() {
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('Semua');
-  const { events, loading, error } = useEvents({ q: query, category });
+  const debouncedQuery = useDebouncedValue(query.trim(), 300);
+  const { events, loading, error } = useEvents({ q: debouncedQuery, category });
 
   return (
     <main>

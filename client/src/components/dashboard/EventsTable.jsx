@@ -20,10 +20,10 @@ function EventRow({ event, onEdit, onDelete }) {
       </td>
       <td>
         <div className="table-actions">
-          <button className="icon-button" title="Edit" onClick={() => onEdit(event)}>
+          <button type="button" className="icon-button" title="Edit" aria-label={`Edit ${event.title}`} onClick={() => onEdit(event)}>
             <Pencil size={16} />
           </button>
-          <button className="icon-button danger" title="Delete" onClick={() => onDelete(event.id)}>
+          <button type="button" className="icon-button danger" title="Delete" aria-label={`Hapus ${event.title}`} onClick={() => onDelete(event.id)}>
             <Trash2 size={16} />
           </button>
         </div>

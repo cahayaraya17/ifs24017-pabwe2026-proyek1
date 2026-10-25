@@ -214,7 +214,7 @@ describe('CampusMapPage', () => {
 
     expect(screen.getByText('LOKASI DIPILIH')).toBeInTheDocument();
 
-    await user.click(screen.getByRole('button', { name: 'Tutup' }));
+    await user.click(screen.getByRole('button', { name: 'Tutup lokasi dipilih' }));
 
     expect(screen.queryByText('LOKASI DIPILIH')).not.toBeInTheDocument();
   });

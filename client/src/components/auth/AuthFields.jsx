@@ -1,11 +1,11 @@
-﻿import { LockKeyhole, Mail, UserRound } from 'lucide-react';
+import { LockKeyhole, Mail, UserRound } from 'lucide-react';
 
 function Field({ label, icon: Icon, ...inputProps }) {
   return (
     <label>
       {label}
       <div className="input-with-icon">
-        <Icon size={17} />
+        <Icon size={17} aria-hidden="true" />
         <input {...inputProps} />
       </div>
     </label>
@@ -24,6 +24,7 @@ export default function AuthFields({ values, onChange, isRegister }) {
           autoComplete="name"
           required
           minLength={2}
+          maxLength={100}
           value={values.name}
           onChange={(e) => onChange('name', e.target.value)}
           placeholder="Nama kamu"
@@ -35,8 +36,12 @@ export default function AuthFields({ values, onChange, isRegister }) {
         id="username"
         name="username"
         autoComplete="username"
+        autoCapitalize="none"
+        autoCorrect="off"
+        inputMode="email"
         required
-        type="text" inputMode="email" autoCapitalize="none" autoCorrect="off"
+        type="text"
+        maxLength={190}
         value={values.email}
         onChange={(e) => onChange('email', e.target.value)}
         placeholder="nama@kampus.ac.id"
@@ -49,6 +54,7 @@ export default function AuthFields({ values, onChange, isRegister }) {
         autoComplete={isRegister ? 'new-password' : 'current-password'}
         required
         minLength={8}
+        maxLength={100}
         type="password"
         value={values.password}
         onChange={(e) => onChange('password', e.target.value)}
@@ -57,4 +63,3 @@ export default function AuthFields({ values, onChange, isRegister }) {
     </>
   );
 }
-
