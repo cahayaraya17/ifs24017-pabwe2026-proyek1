@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import Database from 'better-sqlite3';
 import dotenv from 'dotenv';
+import { seedDemoData } from './autoSeed.js';
 
 dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -58,6 +59,9 @@ CREATE INDEX IF NOT EXISTS idx_events_start_at ON events(start_at);
 CREATE INDEX IF NOT EXISTS idx_events_status ON events(status);
 CREATE INDEX IF NOT EXISTS idx_registrations_event ON registrations(event_id, status);
 `);
+
+// Di Vercel database /tmp selalu kosong saat instance baru menyala, jadi isi data demo otomatis.
+if (process.env.VERCEL) seedDemoData(db);
 
 export function eventSelect(where = '') {
   return `
