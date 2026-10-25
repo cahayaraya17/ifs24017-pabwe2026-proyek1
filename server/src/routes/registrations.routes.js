@@ -1,7 +1,11 @@
 import { Router } from 'express';
-import { requireAuth, allowRoles } from '../middleware/auth.js';
-import { myRegistrations, cancelRegistration } from '../controllers/registrations.controller.js';
+import { ROLES } from '../constants/roles.js';
+import { cancelRegistration, myRegistrations } from '../controllers/registration.controller.js';
+import { allowRoles, requireAuth } from '../middleware/auth.js';
+
 const router = Router();
-router.get('/me', requireAuth, allowRoles('student'), myRegistrations);
+
+router.get('/me', requireAuth, allowRoles(ROLES.STUDENT), myRegistrations);
 router.delete('/:id', requireAuth, cancelRegistration);
+
 export default router;

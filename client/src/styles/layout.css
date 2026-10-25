@@ -1,0 +1,125 @@
+.topbar {
+  height: 78px;
+  padding: 0 max(24px, calc((100vw - 1160px) / 2));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+  background: rgba(11, 16, 32, 0.86);
+  backdrop-filter: blur(18px);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font:
+    700 19px 'Space Grotesk',
+    sans-serif;
+  letter-spacing: -0.6px;
+}
+.brand > span:last-child {
+  display: flex;
+  flex-direction: column;
+}
+.brand small {
+  font:
+    600 12px 'DM Sans',
+    sans-serif;
+  color: #78839d;
+  letter-spacing: 1.5px;
+  margin-top: 3px;
+}
+.brand-accent {
+  color: #a78bfa;
+}
+.nav-links {
+  display: flex;
+  gap: 7px;
+}
+.nav-links a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 13px;
+  border-radius: 9px;
+  color: #929db6;
+  font-size: 13px;
+  font-weight: 600;
+}
+.nav-links a.active,
+.nav-links a:hover {
+  background: #1b2340;
+  color: #d7ccff;
+}
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.user-name {
+  font-size: 12px;
+  color: #c8d0e2;
+}
+.avatar {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #29234b;
+  color: #c4b5fd;
+}
+.footer {
+  min-height: 80px;
+  border-top: 1px solid #222d43;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  color: #78849d;
+  font-size: 12px;
+}
+.footer-brand {
+  font-size: 16px;
+}
+.footer-brand .brand-mark {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+}
+@media (max-width: 900px) {
+  .nav-links a {
+    padding: 9px;
+  }
+  .nav-links a svg {
+    display: none;
+  }
+}
+@media (max-width: 680px) {
+  .topbar {
+    height: 66px;
+    padding: 0 16px;
+  }
+  .brand {
+    font-size: 16px;
+    gap: 8px;
+  }
+  .brand small {
+    font-size: 12px;
+  }
+  .nav-links {
+    display: none;
+  }
+  .user-name {
+    display: none;
+  }
+  .footer {
+    padding: 20px 0;
+    align-items: start;
+    flex-direction: column;
+    justify-content: center;
+  }
+}

@@ -9,9 +9,12 @@
     "test": "npm test --prefix server",
     "db:seed": "npm run db:seed --prefix server",
     "test:client": "npm run test:coverage --prefix client",
-    "test:all": "npm run test --prefix server && npm run test:client"
+    "test:all": "npm run test --prefix server && npm run test:client",
+    "format": "prettier --write \"client/src/**/*.{js,jsx,css}\" \"server/{src,tests,database}/**/*.js\" \"*.md\"",
+    "format:check": "prettier --check \"client/src/**/*.{js,jsx,css}\" \"server/{src,tests,database}/**/*.js\""
   },
   "devDependencies": {
-    "concurrently": "^9.1.2"
+    "concurrently": "^9.1.2",
+    "prettier": "^3.9.10"
   }
 }

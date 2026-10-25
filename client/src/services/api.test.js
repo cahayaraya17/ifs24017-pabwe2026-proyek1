@@ -38,12 +38,9 @@ describe('API service', () => {
 
     await expect(api('/events')).resolves.toEqual({ events: [] });
 
-    expect(fetchMock).toHaveBeenCalledWith(
-      'http://localhost:4000/api/events',
-      {
-        headers: { 'Content-Type': 'application/json' },
-      },
-    );
+    expect(fetchMock).toHaveBeenCalledWith('http://localhost:4000/api/events', {
+      headers: { 'Content-Type': 'application/json' },
+    });
   });
 
   it('menambahkan bearer token ketika token tersedia', async () => {
@@ -58,9 +55,7 @@ describe('API service', () => {
 
     await api('/auth/me');
 
-    expect(fetchMock.mock.calls[0][1].headers.Authorization).toBe(
-      'Bearer abc123',
-    );
+    expect(fetchMock.mock.calls[0][1].headers.Authorization).toBe('Bearer abc123');
   });
 
   it('mengembalikan null untuk respons 204', async () => {
@@ -86,9 +81,7 @@ describe('API service', () => {
       }),
     );
 
-    await expect(api('/events', { method: 'POST' })).rejects.toThrow(
-      'Data tidak valid',
-    );
+    await expect(api('/events', { method: 'POST' })).rejects.toThrow('Data tidak valid');
   });
 
   it('menggunakan pesan status jika server tidak menyediakan error', async () => {

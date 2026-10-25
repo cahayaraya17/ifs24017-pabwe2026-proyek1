@@ -23,23 +23,21 @@ await new Promise((resolve, reject) => {
 const baseUrl = `http://127.0.0.1:${server.address().port}`;
 
 const passwordHash = bcrypt.hashSync('TestPassword123!', 4);
-const insertUser = db.prepare(
-  'INSERT INTO users(name,email,password_hash,role) VALUES(?,?,?,?)'
+const insertUser = db.prepare('INSERT INTO users(name,email,password_hash,role) VALUES(?,?,?,?)');
+
+const ownerId = Number(
+  insertUser.run('Owner Organizer', 'owner@example.com', passwordHash, 'organizer').lastInsertRowid,
 );
 
-const ownerId = Number(insertUser.run(
-  'Owner Organizer', 'owner@example.com', passwordHash, 'organizer'
-).lastInsertRowid);
-
-const otherId = Number(insertUser.run(
-  'Other Organizer', 'other@example.com', passwordHash, 'organizer'
-).lastInsertRowid);
+const otherId = Number(
+  insertUser.run('Other Organizer', 'other@example.com', passwordHash, 'organizer').lastInsertRowid,
+);
 
 function tokenFor(id, role = 'organizer') {
   return jwt.sign(
     { id, role, email: `${role}${id}@example.com`, name: role },
     process.env.JWT_SECRET,
-    { expiresIn: '5m' }
+    { expiresIn: '5m' },
   );
 }
 
@@ -52,23 +50,27 @@ if (!category) {
 }
 const categoryId = db.prepare('SELECT id FROM categories LIMIT 1').get().id;
 
-const eventResult = db.prepare(`
+const eventResult = db
+  .prepare(
+    `
   INSERT INTO events (
     category_id, organizer_id, title, description, location,
     start_at, end_at, capacity, status, image_url
   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-`).run(
-  categoryId,
-  ownerId,
-  'Owner Test Event',
-  'Event for ownership tests',
-  'Campus Hall',
-  '2030-01-10T09:00:00.000Z',
-  '2030-01-10T11:00:00.000Z',
-  20,
-  'published',
-  ''
-);
+`,
+  )
+  .run(
+    categoryId,
+    ownerId,
+    'Owner Test Event',
+    'Event for ownership tests',
+    'Campus Hall',
+    '2030-01-10T09:00:00.000Z',
+    '2030-01-10T11:00:00.000Z',
+    20,
+    'published',
+    '',
+  );
 
 const eventId = Number(eventResult.lastInsertRowid);
 
@@ -77,9 +79,9 @@ test('organizer cannot update another organizer event', async () => {
     method: 'PATCH',
     headers: {
       Authorization: `Bearer ${otherToken}`,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ title: 'Unauthorized Change' })
+    body: JSON.stringify({ title: 'Unauthorized Change' }),
   });
 
   assert.equal(response.status, 403);
@@ -88,7 +90,7 @@ test('organizer cannot update another organizer event', async () => {
 test('organizer cannot delete another organizer event', async () => {
   const response = await fetch(`${baseUrl}/api/events/${eventId}`, {
     method: 'DELETE',
-    headers: { Authorization: `Bearer ${otherToken}` }
+    headers: { Authorization: `Bearer ${otherToken}` },
   });
 
   assert.equal(response.status, 403);
@@ -102,9 +104,9 @@ test('event owner can update their own event', async () => {
     method: 'PATCH',
     headers: {
       Authorization: `Bearer ${ownerToken}`,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ title: 'Updated Owner Event' })
+    body: JSON.stringify({ title: 'Updated Owner Event' }),
   });
 
   assert.equal(response.status, 200);
@@ -114,7 +116,7 @@ test('event owner can update their own event', async () => {
 
 test.after(async () => {
   await new Promise((resolve, reject) => {
-    server.close(error => error ? reject(error) : resolve());
+    server.close((error) => (error ? reject(error) : resolve()));
   });
   db.close();
   fs.rmSync(tempDir, { recursive: true, force: true });

@@ -1,0 +1,7 @@
+node_modules/
+client/dist/
+client/coverage/
+server/data/
+package-lock.json
+**/package-lock.json
+docs/*.postman_collection.json

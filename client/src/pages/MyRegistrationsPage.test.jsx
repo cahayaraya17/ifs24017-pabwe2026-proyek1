@@ -37,13 +37,9 @@ describe('MyRegistrationsPage', () => {
 
     renderPage();
 
-    expect(
-      await screen.findByText(/belum mendaftar acara/i),
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/belum mendaftar acara/i)).toBeInTheDocument();
 
-    expect(
-      screen.getByRole('link', { name: /jelajahi acara/i }),
-    ).toHaveAttribute('href', '/');
+    expect(screen.getByRole('link', { name: /jelajahi acara/i })).toHaveAttribute('href', '/');
   });
 
   it('menampilkan daftar acara yang diikuti', async () => {
@@ -51,9 +47,7 @@ describe('MyRegistrationsPage', () => {
 
     renderPage();
 
-    expect(
-      await screen.findByText('Seminar Teknologi'),
-    ).toBeInTheDocument();
+    expect(await screen.findByText('Seminar Teknologi')).toBeInTheDocument();
 
     expect(screen.getByText('Auditorium Kampus')).toBeInTheDocument();
     expect(screen.getByText('registered')).toBeInTheDocument();
@@ -65,9 +59,7 @@ describe('MyRegistrationsPage', () => {
 
     renderPage();
 
-    expect(
-      await screen.findByText('Gagal memuat pendaftaran'),
-    ).toBeInTheDocument();
+    expect(await screen.findByText('Gagal memuat pendaftaran')).toBeInTheDocument();
   });
 
   it('mendukung respons tanpa properti registrations', async () => {
@@ -75,9 +67,7 @@ describe('MyRegistrationsPage', () => {
 
     renderPage();
 
-    expect(
-      await screen.findByText(/belum mendaftar acara/i),
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/belum mendaftar acara/i)).toBeInTheDocument();
   });
 
   it('membatalkan pendaftaran setelah konfirmasi', async () => {
@@ -90,13 +80,9 @@ describe('MyRegistrationsPage', () => {
 
     renderPage();
 
-    await user.click(
-      await screen.findByRole('button', { name: /cancel/i }),
-    );
+    await user.click(await screen.findByRole('button', { name: /cancel/i }));
 
-    expect(window.confirm).toHaveBeenCalledWith(
-      'Batalkan pendaftaran acara ini?',
-    );
+    expect(window.confirm).toHaveBeenCalledWith('Batalkan pendaftaran acara ini?');
 
     await waitFor(() => {
       expect(api).toHaveBeenNthCalledWith(2, '/registrations/1', {
@@ -105,9 +91,7 @@ describe('MyRegistrationsPage', () => {
       expect(api).toHaveBeenCalledTimes(3);
     });
 
-    expect(
-      await screen.findByText(/belum mendaftar acara/i),
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/belum mendaftar acara/i)).toBeInTheDocument();
   });
 
   it('tidak membatalkan pendaftaran jika konfirmasi ditolak', async () => {
@@ -117,9 +101,7 @@ describe('MyRegistrationsPage', () => {
 
     renderPage();
 
-    await user.click(
-      await screen.findByRole('button', { name: /cancel/i }),
-    );
+    await user.click(await screen.findByRole('button', { name: /cancel/i }));
 
     expect(api).toHaveBeenCalledTimes(1);
     expect(screen.getByText('Seminar Teknologi')).toBeInTheDocument();
@@ -134,13 +116,9 @@ describe('MyRegistrationsPage', () => {
 
     renderPage();
 
-    await user.click(
-      await screen.findByRole('button', { name: /cancel/i }),
-    );
+    await user.click(await screen.findByRole('button', { name: /cancel/i }));
 
-    expect(
-      await screen.findByText('Pembatalan gagal'),
-    ).toBeInTheDocument();
+    expect(await screen.findByText('Pembatalan gagal')).toBeInTheDocument();
   });
 
   it('tidak menampilkan tombol Cancel untuk pendaftaran yang sudah selesai statusnya', async () => {
@@ -150,12 +128,8 @@ describe('MyRegistrationsPage', () => {
 
     renderPage();
 
-    expect(
-      await screen.findByText('cancelled'),
-    ).toBeInTheDocument();
+    expect(await screen.findByText('cancelled')).toBeInTheDocument();
 
-    expect(
-      screen.queryByRole('button', { name: /cancel/i }),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /cancel/i })).not.toBeInTheDocument();
   });
 });

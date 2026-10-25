@@ -1,47 +1,67 @@
 import bcrypt from 'bcryptjs';
 import { db } from '../../src/config/database.js';
+import {
+  DEMO_PASSWORD,
+  ORGANIZER_EMAIL,
+  SEED_CATEGORIES,
+  SEED_EVENTS,
+  SEED_USERS,
+} from './data.js';
 
-const seed = db.transaction(() => {
-  const categories = [
-    ['Seminar','Seminar dan diskusi kampus'],
-    ['Workshop','Kegiatan belajar praktik'],
-    ['Kompetisi','Lomba dan kompetisi mahasiswa'],
-    ['Karier','Karier dan pengembangan profesional'],
-    ['Komunitas','Kegiatan organisasi dan komunitas'],
-    ['Olahraga','Kegiatan olahraga'],
-    ['Seni','Seni, musik, dan budaya']
-  ];
-  const insertCategory = db.prepare('INSERT OR IGNORE INTO categories(name,description) VALUES(?,?)');
-  categories.forEach(c=>insertCategory.run(...c));
+const SEED_BCRYPT_ROUNDS = 10;
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+const TWO_HOURS_MS = 2 * 60 * 60 * 1000;
+const EVENT_START_HOUR = 9;
 
-  const demoPassword = 'CampusPulse123!';
-  const insertUser = db.prepare('INSERT OR IGNORE INTO users(name,email,password_hash,role) VALUES(?,?,?,?)');
-  insertUser.run('CampusPulse Admin','admin@campuspulse.local',bcrypt.hashSync(demoPassword,10),'admin');
-  insertUser.run('Event Organizer','organizer@campuspulse.local',bcrypt.hashSync(demoPassword,10),'organizer');
-  insertUser.run('Demo Student','student@campuspulse.local',bcrypt.hashSync(demoPassword,10),'student');
+function seedCategories() {
+  const insert = db.prepare('INSERT OR IGNORE INTO categories (name, description) VALUES (?, ?)');
+  SEED_CATEGORIES.forEach((category) => insert.run(...category));
+}
 
-  const organizer = db.prepare("SELECT id FROM users WHERE email='organizer@campuspulse.local'").get().id;
-  const count = db.prepare('SELECT COUNT(*) AS count FROM events').get().count;
-  if (count === 0) {
-    const getCat = db.prepare('SELECT id FROM categories WHERE name=?');
-    const insertEvent = db.prepare(`INSERT INTO events(category_id,organizer_id,title,description,location,start_at,end_at,capacity,status)
-      VALUES(?,?,?,?,?,?,?,?,?)`);
-    const now = new Date();
-    const eventData = [
-      ['Workshop','Build Your First Web App','Workshop hands-on untuk membangun aplikasi web pertamamu bersama komunitas teknologi kampus.','Lab Komputer 2',3,45],
-      ['Seminar','Future of Digital Innovation','Diskusi inspiratif tentang teknologi, inovasi, dan peluang karier digital bagi mahasiswa.','Auditorium Utama',2,120],
-      ['Kompetisi','Campus Creative Challenge','Tunjukkan ide kreatifmu dan kolaborasi dengan mahasiswa lintas program studi.','Student Center',7,80],
-      ['Karier','Career Ready: CV & Interview','Persiapkan diri memasuki dunia kerja lewat praktik CV dan simulasi wawancara.','Ruang Seminar A',5,60],
-      ['Komunitas','Meet the Campus Community','Kenali organisasi dan komunitas yang bisa menjadi rumah kedua selama kuliah.','Lapangan Kampus',10,100],
-      ['Seni','Acoustic Night','Malam santai untuk menikmati musik, bertemu teman baru, dan merayakan kreativitas.','Taman Kampus',14,150]
-    ];
-    for (const [cat,title,description,location,days,capacity] of eventData) {
-      const start = new Date(now.getTime()+days*86400000); start.setHours(9,0,0,0);
-      const end = new Date(start.getTime()+2*3600000);
-      insertEvent.run(getCat.get(cat).id,organizer,title,description,location,start.toISOString(),end.toISOString(),capacity,'published');
-    }
+function seedUsers() {
+  const passwordHash = bcrypt.hashSync(DEMO_PASSWORD, SEED_BCRYPT_ROUNDS);
+  const insert = db.prepare(
+    'INSERT OR IGNORE INTO users (name, email, password_hash, role) VALUES (?, ?, ?, ?)',
+  );
+  SEED_USERS.forEach(({ name, email, role }) => insert.run(name, email, passwordHash, role));
+}
+
+function seedEvents() {
+  const { count } = db.prepare('SELECT COUNT(*) AS count FROM events').get();
+  if (count > 0) return;
+
+  const organizerId = db.prepare('SELECT id FROM users WHERE email = ?').get(ORGANIZER_EMAIL).id;
+  const findCategory = db.prepare('SELECT id FROM categories WHERE name = ?');
+  const insert = db.prepare(
+    `INSERT INTO events (category_id, organizer_id, title, description, location,
+                         start_at, end_at, capacity, status)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'published')`,
+  );
+  const now = Date.now();
+
+  for (const [category, title, description, location, daysAhead, capacity] of SEED_EVENTS) {
+    const start = new Date(now + daysAhead * ONE_DAY_MS);
+    start.setHours(EVENT_START_HOUR, 0, 0, 0);
+    const end = new Date(start.getTime() + TWO_HOURS_MS);
+
+    insert.run(
+      findCategory.get(category).id,
+      organizerId,
+      title,
+      description,
+      location,
+      start.toISOString(),
+      end.toISOString(),
+      capacity,
+    );
   }
-});
-seed();
-console.log('Database seeded. Demo accounts: admin@campuspulse.local, organizer@campuspulse.local, student@campuspulse.local');
+}
+
+db.transaction(() => {
+  seedCategories();
+  seedUsers();
+  seedEvents();
+})();
+
+console.log(`Database seeded. Demo accounts: ${SEED_USERS.map((user) => user.email).join(', ')}`);
 db.close();
