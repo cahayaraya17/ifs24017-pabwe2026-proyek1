@@ -1,6 +1,11 @@
-
+groovy
 pipeline {
-  agent any
+  agent {
+    docker {
+      image 'node:22'
+      args '-u root'
+    }
+  }
 
   stages {
     stage('Check Environment') {
