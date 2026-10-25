@@ -1,4 +1,8 @@
+import { useEffect, useRef } from 'react';
 import { Save, X } from 'lucide-react';
+
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 function Field({ label, className, children }) {
   return (
@@ -18,6 +22,45 @@ export default function EventFormModal({
   onSubmit,
   onClose,
 }) {
+  const dialogRef = useRef(null);
+  const closeButtonRef = useRef(null);
+
+  useEffect(() => {
+    const previousFocus = document.activeElement;
+    closeButtonRef.current?.focus();
+
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+
+      if (event.key !== 'Tab' || !dialogRef.current) return;
+      const focusable = Array.from(dialogRef.current.querySelectorAll(FOCUSABLE_SELECTOR));
+      if (focusable.length === 0) {
+        event.preventDefault();
+        return;
+      }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      if (previousFocus instanceof HTMLElement) previousFocus.focus();
+    };
+  }, [onClose]);
+
   const bind = (field) => ({
     value: form[field],
     onChange: (e) => onChange(field, e.target.value),
@@ -25,14 +68,27 @@ export default function EventFormModal({
 
   return (
     <div className="modal-backdrop">
-      <form className="event-form-panel" onSubmit={onSubmit}>
+      <form
+        ref={dialogRef}
+        className="event-form-panel"
+        onSubmit={onSubmit}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="event-form-title"
+      >
         <div className="form-panel-heading">
           <div>
             <span className="eyebrow">EVENT MANAGEMENT</span>
-            <h2>{editing ? 'Edit event' : 'Create an event'}</h2>
+            <h2 id="event-form-title">{editing ? 'Edit event' : 'Create an event'}</h2>
           </div>
-          <button type="button" className="icon-button" onClick={onClose}>
-            <X />
+          <button
+            ref={closeButtonRef}
+            type="button"
+            className="icon-button"
+            onClick={onClose}
+            aria-label="Tutup formulir acara"
+          >
+            <X aria-hidden="true" />
           </button>
         </div>
 
@@ -78,7 +134,7 @@ export default function EventFormModal({
             Cancel
           </button>
           <button className="button" disabled={busy}>
-            <Save size={16} />
+            <Save size={16} aria-hidden="true" />
             {busy ? 'Saving...' : 'Save event'}
           </button>
         </div>

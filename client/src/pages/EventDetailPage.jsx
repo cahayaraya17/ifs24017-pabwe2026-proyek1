@@ -26,7 +26,6 @@ export default function EventDetailPage({ user }) {
     }
     register();
   }
- HEAD
 
   if (!event && !error) {
     return (
@@ -76,6 +75,7 @@ export default function EventDetailPage({ user }) {
       </div>
     </main>
   );
+<<<<<<< HEAD
 
   if (!event && !error) return <main className="container page-pad"><h1 className="sr-only">Detail acara</h1><div className="state-panel">Memuat detail acara...</div></main>;
   if (error && !event) return <main className="container page-pad"><h1 className="sr-only">Detail acara</h1><div className="state-panel error-state">{error}<p><Link to="/">Kembali</Link></p></div></main>;
@@ -87,4 +87,6 @@ export default function EventDetailPage({ user }) {
     </div>
   </main>;
 
+=======
+>>>>>>> 3b0c4bcce212ac047aec4e37c5901947d5274b3e
 }

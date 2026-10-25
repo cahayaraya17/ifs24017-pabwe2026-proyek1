@@ -14,9 +14,10 @@ export default function RolePicker({ selectedRole, onChoose }) {
           key={role}
           type="button"
           className={selectedRole === role ? 'role-option selected' : 'role-option'}
+          aria-pressed={selectedRole === role}
           onClick={() => onChoose(role)}
         >
-          <Icon size={18} />
+          <Icon size={18} aria-hidden="true" />
           <span>{label}</span>
         </button>
       ))}

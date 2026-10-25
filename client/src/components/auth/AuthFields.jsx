@@ -5,7 +5,7 @@ function Field({ label, icon: Icon, ...inputProps }) {
     <label>
       {label}
       <div className="input-with-icon">
-        <Icon size={17} />
+        <Icon size={17} aria-hidden="true" />
         <input {...inputProps} />
       </div>
     </label>
@@ -24,6 +24,7 @@ export default function AuthFields({ values, onChange, isRegister }) {
           autoComplete="name"
           required
           minLength={2}
+          maxLength={100}
           value={values.name}
           onChange={(e) => onChange('name', e.target.value)}
           placeholder="Nama kamu"
@@ -35,13 +36,21 @@ export default function AuthFields({ values, onChange, isRegister }) {
         id="username"
         name="username"
         autoComplete="username"
+        autoCapitalize="none"
+        autoCorrect="off"
+        inputMode="email"
         required
+<<<<<<< HEAD
        
 type="text"
 inputMode="email"
 autoCapitalize="none"
 autoCorrect="off"
 
+=======
+        type="text"
+        maxLength={190}
+>>>>>>> 3b0c4bcce212ac047aec4e37c5901947d5274b3e
         value={values.email}
         onChange={(e) => onChange('email', e.target.value)}
         placeholder="nama@kampus.ac.id"
@@ -54,6 +63,7 @@ autoCorrect="off"
         autoComplete={isRegister ? 'new-password' : 'current-password'}
         required
         minLength={8}
+        maxLength={100}
         type="password"
         value={values.password}
         onChange={(e) => onChange('password', e.target.value)}

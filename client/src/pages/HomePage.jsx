@@ -1,5 +1,6 @@
 import { ArrowRight } from 'lucide-react';
 import { useState } from 'react';
+import { useDebouncedValue } from '../hooks/useDebouncedValue';
 import { Link } from 'react-router-dom';
 import EventList from '../components/home/EventList';
 import EventToolbar from '../components/home/EventToolbar';
@@ -9,10 +10,10 @@ import StatsStrip from '../components/home/StatsStrip';
 import { useEvents } from '../hooks/useEvents';
 
 export default function HomePage() {
-HEAD
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('Semua');
-  const { events, loading, error } = useEvents({ q: query, category });
+  const debouncedQuery = useDebouncedValue(query.trim(), 300);
+  const { events, loading, error } = useEvents({ q: debouncedQuery, category });
 
   return (
     <main>
@@ -44,6 +45,7 @@ HEAD
       <Footer />
     </main>
   );
+<<<<<<< HEAD
 
   const [events,setEvents] = useState([]);
   const [q,setQ] = useState('');
@@ -96,4 +98,6 @@ HEAD
     <footer className="footer container"><Link to="/" className="brand footer-brand"><span className="brand-mark"><Sparkles size={18}/></span><span>Campus<span className="brand-accent">Pulse</span></span></Link><span>Made for campus life · CampusPulse MVP</span></footer>
   </main>;
  
+=======
+>>>>>>> 3b0c4bcce212ac047aec4e37c5901947d5274b3e
 }

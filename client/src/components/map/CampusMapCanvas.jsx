@@ -1,19 +1,34 @@
+import { useEffect } from 'react';
+import L from 'leaflet';
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import { MapPin } from 'lucide-react';
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { CAMPUS_CENTER, CAMPUS_PLACES } from '../../constants';
 import { placeDirectionsUrl } from '../../utils/maps';
 
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerIcon2x,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+});
+
 function MapRecenter({ place }) {
   const map = useMap();
-  if (place) map.flyTo([place.lat, place.lng], 18, { duration: 0.5 });
+
+  useEffect(() => {
+    if (place) map.flyTo([place.lat, place.lng], 18, { duration: 0.5 });
+  }, [map, place]);
+
   return null;
 }
 
 function SelectedPlaceCard({ place, onClose }) {
   return (
     <div className="map-selected-card">
-      <button className="map-close" onClick={onClose} aria-label="Tutup">
+      <button type="button" className="map-close" onClick={onClose} aria-label="Tutup lokasi dipilih">
         ×
       </button>
       <span className="eyebrow">LOKASI DIPILIH</span>
