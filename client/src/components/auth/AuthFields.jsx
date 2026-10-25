@@ -1,4 +1,4 @@
-import { LockKeyhole, Mail, UserRound } from 'lucide-react';
+﻿import { LockKeyhole, Mail, UserRound } from 'lucide-react';
 
 function Field({ label, icon: Icon, ...inputProps }) {
   return (
@@ -36,7 +36,7 @@ export default function AuthFields({ values, onChange, isRegister }) {
         name="username"
         autoComplete="username"
         required
-        type="email"
+        type="text" inputMode="email" autoCapitalize="none" autoCorrect="off"
         value={values.email}
         onChange={(e) => onChange('email', e.target.value)}
         placeholder="nama@kampus.ac.id"
@@ -57,3 +57,4 @@ export default function AuthFields({ values, onChange, isRegister }) {
     </>
   );
 }
+
