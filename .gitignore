@@ -13,3 +13,10 @@ client/coverage/
 *.bak
 *.error-backup
 dashboard-test-errors.txt
+
+# Cache dan keluaran CI
+.ci-home/
+.npm-cache/
+.trivy-cache/
+trivy-results.sarif
+latest-app.zip
