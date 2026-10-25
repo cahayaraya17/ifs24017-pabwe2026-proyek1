@@ -86,5 +86,5 @@ export default function EventDetailPage({ user }) {
       <aside className="registration-panel"><span className="eyebrow">SAVE YOUR SPOT</span><h2>Be part of it.</h2><p className="muted">Daftar dan jadikan acara ini bagian dari pengalaman kampusmu.</p><div className="capacity-bar"><span style={{width:`${Math.min(100,(event.registered_count/event.capacity)*100)}%`}}/></div><small className="muted">{Math.max(0,event.capacity-event.registered_count)} tempat tersisa</small>{message && <div className="success-message"><CheckCircle2 size={17}/>{message}</div>}{error && <div className="form-error">{error}</div>}<button className="button button-full" disabled={busy || event.status!=='published' || event.registered_count>=event.capacity} onClick={register}>{busy?'Memproses...':event.registered_count>=event.capacity?'Kuota penuh':'Register for event'}</button><small className="muted panel-footnote">Pendaftaran mengikuti kuota yang tersedia.</small></aside>
     </div>
   </main>;
- 6cb59b3f444b93aa1caf938a9288d8c48937c331
+
 }
