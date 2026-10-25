@@ -6,7 +6,10 @@ import dotenv from 'dotenv';
 
 dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 const here = path.dirname(fileURLToPath(import.meta.url));
-const defaultPath = path.resolve(here, '../../data/campuspulse.sqlite');
+// Di Vercel hanya /tmp yang dapat ditulis; di lokal tetap memakai server/data.
+const defaultPath = process.env.VERCEL
+  ? '/tmp/campuspulse.sqlite'
+  : path.resolve(here, '../../data/campuspulse.sqlite');
 const configured = process.env.DB_PATH || defaultPath;
 const dbPath = path.isAbsolute(configured) ? configured : path.resolve(process.cwd(), configured);
 fs.mkdirSync(path.dirname(dbPath), { recursive: true });
