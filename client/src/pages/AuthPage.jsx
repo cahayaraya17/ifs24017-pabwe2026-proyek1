@@ -36,7 +36,9 @@ export default function AuthPage({ mode, onAuthChange }) {
           <button type="button" className={selectedRole==='organizer'?'role-option selected':'role-option'} onClick={()=>chooseDemo('organizer')}><CalendarDays size={18}/><span>Organizer</span></button>
           <button type="button" className={selectedRole==='admin'?'role-option selected':'role-option'} onClick={()=>chooseDemo('admin')}><ShieldCheck size={18}/><span>Admin</span></button>
         </div>}
-        <form onSubmit={submit} className="auth-form">
+       
+<form onSubmit={submit} className="auth-form" noValidate>
+
           {isRegister && <label>Nama lengkap<div className="input-with-icon"><UserRound size={17}/><input id="name" name="name" autoComplete="name" required minLength={2} value={name} onChange={e=>setName(e.target.value)} placeholder="Nama kamu"/></div></label>}
           <label>Email kampus<div className="input-with-icon"><Mail size={17}/><input id="username" name="username" autoComplete="username" required type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="nama@kampus.ac.id"/></div></label>
           <label>Password<div className="input-with-icon"><LockKeyhole size={17}/><input id="password" name="password" autoComplete={isRegister?'new-password':'current-password'} required minLength={8} type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Minimal 8 karakter"/></div></label>
