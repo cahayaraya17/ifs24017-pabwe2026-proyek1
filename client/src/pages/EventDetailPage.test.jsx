@@ -35,10 +35,7 @@ function renderPage({ user = null, id = '1' } = {}) {
   return render(
     <MemoryRouter initialEntries={[`/events/${id}`]}>
       <Routes>
-        <Route
-          path="/events/:id"
-          element={<EventDetailPage user={user} />}
-        />
+        <Route path="/events/:id" element={<EventDetailPage user={user} />} />
         <Route path="/login" element={<LocationDisplay />} />
         <Route path="/" element={<LocationDisplay />} />
       </Routes>
@@ -68,9 +65,7 @@ describe('EventDetailPage', () => {
 
     renderPage();
 
-    expect(
-      await screen.findByRole('heading', { name: 'Seminar Teknologi' }),
-    ).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Seminar Teknologi' })).toBeInTheDocument();
 
     expect(screen.getByText('Belajar teknologi terbaru.')).toBeInTheDocument();
     expect(screen.getByText('Auditorium Kampus')).toBeInTheDocument();
@@ -84,14 +79,9 @@ describe('EventDetailPage', () => {
 
     renderPage();
 
-    expect(
-      await screen.findByText('Acara tidak ditemukan'),
-    ).toBeInTheDocument();
+    expect(await screen.findByText('Acara tidak ditemukan')).toBeInTheDocument();
 
-    expect(screen.getByRole('link', { name: 'Kembali' })).toHaveAttribute(
-      'href',
-      '/',
-    );
+    expect(screen.getByRole('link', { name: 'Kembali' })).toHaveAttribute('href', '/');
   });
 
   it('mengarahkan pengunjung yang belum login ke halaman login', async () => {
@@ -100,13 +90,9 @@ describe('EventDetailPage', () => {
 
     renderPage();
 
-    await user.click(
-      await screen.findByRole('button', { name: /register for event/i }),
-    );
+    await user.click(await screen.findByRole('button', { name: /register for event/i }));
 
-    expect(screen.getByTestId('location')).toHaveTextContent(
-      '/login/events/1',
-    );
+    expect(screen.getByTestId('location')).toHaveTextContent('/login/events/1');
     expect(api).toHaveBeenCalledTimes(1);
   });
 
@@ -119,13 +105,9 @@ describe('EventDetailPage', () => {
 
     renderPage({ user: { id: 7, name: 'Budi', role: 'student' } });
 
-    await user.click(
-      await screen.findByRole('button', { name: /register for event/i }),
-    );
+    await user.click(await screen.findByRole('button', { name: /register for event/i }));
 
-    expect(
-      await screen.findByText('Pendaftaran berhasil!'),
-    ).toBeInTheDocument();
+    expect(await screen.findByText('Pendaftaran berhasil!')).toBeInTheDocument();
 
     expect(api).toHaveBeenNthCalledWith(2, '/events/1/register', {
       method: 'POST',
@@ -137,23 +119,15 @@ describe('EventDetailPage', () => {
   it('menampilkan error jika pendaftaran gagal', async () => {
     const user = userEvent.setup();
 
-    api
-      .mockResolvedValueOnce({ event })
-      .mockRejectedValueOnce(new Error('Pendaftaran ditutup'));
+    api.mockResolvedValueOnce({ event }).mockRejectedValueOnce(new Error('Pendaftaran ditutup'));
 
     renderPage({ user: { id: 7, name: 'Budi', role: 'student' } });
 
-    await user.click(
-      await screen.findByRole('button', { name: /register for event/i }),
-    );
+    await user.click(await screen.findByRole('button', { name: /register for event/i }));
 
-    expect(
-      await screen.findByText('Pendaftaran ditutup'),
-    ).toBeInTheDocument();
+    expect(await screen.findByText('Pendaftaran ditutup')).toBeInTheDocument();
 
-    expect(
-      screen.getByRole('button', { name: /register for event/i }),
-    ).toBeEnabled();
+    expect(screen.getByRole('button', { name: /register for event/i })).toBeEnabled();
   });
 
   it('menonaktifkan tombol jika acara tidak dipublikasikan', async () => {
@@ -163,9 +137,7 @@ describe('EventDetailPage', () => {
 
     renderPage();
 
-    expect(
-      await screen.findByRole('button', { name: /register for event/i }),
-    ).toBeDisabled();
+    expect(await screen.findByRole('button', { name: /register for event/i })).toBeDisabled();
   });
 
   it('menonaktifkan tombol jika kuota penuh', async () => {
@@ -175,9 +147,7 @@ describe('EventDetailPage', () => {
 
     renderPage();
 
-    expect(
-      await screen.findByRole('button', { name: /kuota penuh/i }),
-    ).toBeDisabled();
+    expect(await screen.findByRole('button', { name: /kuota penuh/i })).toBeDisabled();
 
     expect(screen.getByText('0 tempat tersisa')).toBeInTheDocument();
   });
@@ -189,27 +159,19 @@ describe('EventDetailPage', () => {
 
     renderPage();
 
-    expect(
-      await screen.findByText('CAMPUS EVENT'),
-    ).toBeInTheDocument();
+    expect(await screen.findByText('CAMPUS EVENT')).toBeInTheDocument();
   });
 
   it('menggunakan pesan sukses cadangan jika API tidak mengirim message', async () => {
     const user = userEvent.setup();
 
-    api
-      .mockResolvedValueOnce({ event })
-      .mockResolvedValueOnce({});
+    api.mockResolvedValueOnce({ event }).mockResolvedValueOnce({});
 
     renderPage({ user: { id: 7, name: 'Budi', role: 'student' } });
 
-    await user.click(
-      await screen.findByRole('button', { name: /register for event/i }),
-    );
+    await user.click(await screen.findByRole('button', { name: /register for event/i }));
 
-    expect(
-      await screen.findByText('Pendaftaran berhasil!'),
-    ).toBeInTheDocument();
+    expect(await screen.findByText('Pendaftaran berhasil!')).toBeInTheDocument();
   });
 
   it('memakai pesan default dan hitungan awal 0 saat respons pendaftaran minimal', async () => {
@@ -222,9 +184,7 @@ describe('EventDetailPage', () => {
 
     renderPage({ user: { id: 1, name: 'Budi', role: 'student' } });
 
-    await user.click(
-      await screen.findByRole('button', { name: 'Register for event' }),
-    );
+    await user.click(await screen.findByRole('button', { name: 'Register for event' }));
 
     expect(await screen.findByText('Pendaftaran berhasil!')).toBeInTheDocument();
     expect(screen.getByText('1 / 100')).toBeInTheDocument();

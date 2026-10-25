@@ -1,4 +1,3 @@
-
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -10,9 +9,7 @@ const { flyToMock } = vi.hoisted(() => ({
 }));
 
 vi.mock('react-leaflet', () => ({
-  MapContainer: ({ children }) => (
-    <div data-testid="map-container">{children}</div>
-  ),
+  MapContainer: ({ children }) => <div data-testid="map-container">{children}</div>,
   TileLayer: () => <div data-testid="tile-layer" />,
   Marker: ({ children, eventHandlers, position }) => (
     <div
@@ -71,9 +68,7 @@ describe('CampusMapPage', () => {
   it('menampilkan halaman peta dan seluruh lokasi awal', () => {
     renderPage();
 
-    expect(
-      screen.getByRole('heading', { name: /Explore your campus/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Explore your campus/i })).toBeInTheDocument();
 
     const locationList = getLocationList();
 
@@ -102,18 +97,13 @@ describe('CampusMapPage', () => {
     const user = userEvent.setup();
     renderPage();
 
-    await user.type(
-      screen.getByPlaceholderText('Cari lokasi kampus...'),
-      'kantin',
-    );
+    await user.type(screen.getByPlaceholderText('Cari lokasi kampus...'), 'kantin');
 
     const locationList = getLocationList();
 
     expect(locationList.getByText('Kantin Lama')).toBeInTheDocument();
     expect(locationList.getByText('Kantin Baru')).toBeInTheDocument();
-    expect(
-      locationList.queryByText('Perpustakaan'),
-    ).not.toBeInTheDocument();
+    expect(locationList.queryByText('Perpustakaan')).not.toBeInTheDocument();
 
     expect(screen.getByText('2 lokasi')).toBeInTheDocument();
   });
@@ -122,10 +112,7 @@ describe('CampusMapPage', () => {
     const user = userEvent.setup();
     renderPage();
 
-    await user.type(
-      screen.getByPlaceholderText('Cari lokasi kampus...'),
-      'AUDITORIUM',
-    );
+    await user.type(screen.getByPlaceholderText('Cari lokasi kampus...'), 'AUDITORIUM');
 
     expect(getLocationList().getByText('Auditorium')).toBeInTheDocument();
     expect(screen.getByText('1 lokasi')).toBeInTheDocument();
@@ -135,20 +122,13 @@ describe('CampusMapPage', () => {
     const user = userEvent.setup();
     renderPage();
 
-    await user.type(
-      screen.getByPlaceholderText('Cari lokasi kampus...'),
-      'lokasi-tidak-ada',
-    );
+    await user.type(screen.getByPlaceholderText('Cari lokasi kampus...'), 'lokasi-tidak-ada');
 
     const locationList = getLocationList();
 
     expect(screen.getByText('0 lokasi')).toBeInTheDocument();
-    expect(
-      locationList.queryByText('Perpustakaan'),
-    ).not.toBeInTheDocument();
-    expect(
-      locationList.queryByText('Kantin Lama'),
-    ).not.toBeInTheDocument();
+    expect(locationList.queryByText('Perpustakaan')).not.toBeInTheDocument();
+    expect(locationList.queryByText('Kantin Lama')).not.toBeInTheDocument();
   });
 
   it.each([
@@ -168,13 +148,9 @@ describe('CampusMapPage', () => {
       expect(locationList.getByText(place)).toBeInTheDocument();
     });
 
-    expect(
-      screen.getByText(`${expectedPlaces.length} lokasi`),
-    ).toBeInTheDocument();
+    expect(screen.getByText(`${expectedPlaces.length} lokasi`)).toBeInTheDocument();
 
-    expect(
-      screen.getByRole('button', { name: 'Semua' }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Semua' })).toBeInTheDocument();
   });
 
   it('mengembalikan semua lokasi saat filter Semua dipilih', async () => {
@@ -196,17 +172,12 @@ describe('CampusMapPage', () => {
 
     await user.click(screen.getByRole('button', { name: 'Lapangan' }));
 
-    await user.type(
-      screen.getByPlaceholderText('Cari lokasi kampus...'),
-      'hijau',
-    );
+    await user.type(screen.getByPlaceholderText('Cari lokasi kampus...'), 'hijau');
 
     const locationList = getLocationList();
 
     expect(locationList.getByText('Lapangan Hijau')).toBeInTheDocument();
-    expect(
-      locationList.queryByText('Lapangan NA70'),
-    ).not.toBeInTheDocument();
+    expect(locationList.queryByText('Lapangan NA70')).not.toBeInTheDocument();
     expect(screen.getByText('1 lokasi')).toBeInTheDocument();
   });
 
@@ -214,21 +185,13 @@ describe('CampusMapPage', () => {
     const user = userEvent.setup();
     renderPage();
 
-    await user.click(
-      screen.getByRole('button', { name: /Perpustakaan/i }),
-    );
+    await user.click(screen.getByRole('button', { name: /Perpustakaan/i }));
 
     expect(screen.getByText('LOKASI DIPILIH')).toBeInTheDocument();
-    expect(
-      screen.getByRole('heading', { name: 'Perpustakaan' }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(/Fasilitas.*Institut Teknologi Del/),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Perpustakaan' })).toBeInTheDocument();
+    expect(screen.getByText(/Fasilitas.*Institut Teknologi Del/)).toBeInTheDocument();
 
-    expect(
-      screen.getByRole('link', { name: /Buka lokasi di Google Maps/i }),
-    ).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /Buka lokasi di Google Maps/i })).toHaveAttribute(
       'href',
       'https://www.google.com/maps/search/?api=1&query=2.38465,99.1472',
     );
@@ -238,32 +201,22 @@ describe('CampusMapPage', () => {
     const user = userEvent.setup();
     renderPage();
 
-    await user.click(
-      screen.getByRole('button', { name: /Perpustakaan/i }),
-    );
+    await user.click(screen.getByRole('button', { name: /Perpustakaan/i }));
 
-    expect(flyToMock).toHaveBeenCalledWith(
-      [2.38465, 99.1472],
-      18,
-      { duration: 0.5 },
-    );
+    expect(flyToMock).toHaveBeenCalledWith([2.38465, 99.1472], 18, { duration: 0.5 });
   });
 
   it('menutup kartu lokasi dengan tombol Tutup', async () => {
     const user = userEvent.setup();
     renderPage();
 
-    await user.click(
-      screen.getByRole('button', { name: /Perpustakaan/i }),
-    );
+    await user.click(screen.getByRole('button', { name: /Perpustakaan/i }));
 
     expect(screen.getByText('LOKASI DIPILIH')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Tutup' }));
 
-    expect(
-      screen.queryByText('LOKASI DIPILIH'),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText('LOKASI DIPILIH')).not.toBeInTheDocument();
   });
 
   it('memilih lokasi dari marker pada peta', () => {
@@ -273,27 +226,19 @@ describe('CampusMapPage', () => {
     fireEvent.click(markers[0]);
 
     expect(screen.getByText('LOKASI DIPILIH')).toBeInTheDocument();
-    expect(
-      screen.getByRole('heading', { name: 'Perpustakaan' }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Perpustakaan' })).toBeInTheDocument();
   });
 
   it('menyediakan tautan kembali dan Google Maps', () => {
     renderPage();
 
-    expect(
-      screen.getByRole('link', { name: /Kembali/i }),
-    ).toHaveAttribute('href', '/');
+    expect(screen.getByRole('link', { name: /Kembali/i })).toHaveAttribute('href', '/');
 
-    expect(
-      screen.getByRole('link', { name: /Google Maps/i }),
-    ).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /Google Maps/i })).toHaveAttribute(
       'href',
       'https://www.google.com/maps/search/?api=1&query=Institut+Teknologi+Del+Sitoluama+Balige',
     );
 
-    expect(
-      screen.getByText('Acara di sekitar kampus'),
-    ).toBeInTheDocument();
+    expect(screen.getByText('Acara di sekitar kampus')).toBeInTheDocument();
   });
 });

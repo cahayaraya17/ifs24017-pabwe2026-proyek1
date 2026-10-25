@@ -1,11 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import {
-  cleanup,
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-} from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import DashboardPage from './DashboardPage';
 import { api } from '../services/api';
@@ -76,9 +70,7 @@ function renderPage(user = { name: 'Budi' }) {
 async function openCreate(user) {
   await user.click(screen.getByRole('button', { name: /Create event/i }));
 
-  expect(
-    screen.getByRole('heading', { name: 'Create an event' }),
-  ).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Create an event' })).toBeInTheDocument();
 }
 
 async function fillForm(user) {
@@ -97,15 +89,22 @@ async function fillForm(user) {
 }
 
 function submitForm() {
-  fireEvent.submit(screen.getByRole('button', {
-    name: /Save event|Saving/i,
-  }).closest('form'));
+  fireEvent.submit(
+    screen
+      .getByRole('button', {
+        name: /Save event|Saving/i,
+      })
+      .closest('form'),
+  );
 }
 
 describe('DashboardPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.stubGlobal('confirm', vi.fn(() => true));
+    vi.stubGlobal(
+      'confirm',
+      vi.fn(() => true),
+    );
     configureApi();
   });
 
@@ -141,9 +140,7 @@ describe('DashboardPage', () => {
 
     renderPage();
 
-    expect(
-      await screen.findByText('Belum ada acara. Buat acara pertamamu!'),
-    ).toBeInTheDocument();
+    expect(await screen.findByText('Belum ada acara. Buat acara pertamamu!')).toBeInTheDocument();
 
     expect(screen.getByText('0 items')).toBeInTheDocument();
   });
@@ -153,9 +150,7 @@ describe('DashboardPage', () => {
 
     renderPage();
 
-    expect(
-      await screen.findByText('Gagal memuat data'),
-    ).toBeInTheDocument();
+    expect(await screen.findByText('Gagal memuat data')).toBeInTheDocument();
   });
 
   it('menampilkan fallback ketika data statistik tidak tersedia', async () => {
@@ -220,10 +215,7 @@ describe('DashboardPage', () => {
     await user.click(screen.getByRole('button', { name: /Save event/i }));
 
     await waitFor(() => {
-      expect(api).toHaveBeenCalledWith(
-        '/events',
-        expect.objectContaining({ method: 'POST' }),
-      );
+      expect(api).toHaveBeenCalledWith('/events', expect.objectContaining({ method: 'POST' }));
     });
 
     const call = api.mock.calls.find(([path]) => path === '/events');
@@ -265,10 +257,7 @@ describe('DashboardPage', () => {
     await user.click(screen.getByRole('button', { name: /Save event/i }));
 
     await waitFor(() => {
-      expect(api).toHaveBeenCalledWith(
-        '/events',
-        expect.objectContaining({ method: 'POST' }),
-      );
+      expect(api).toHaveBeenCalledWith('/events', expect.objectContaining({ method: 'POST' }));
     });
 
     const call = api.mock.calls.find(
@@ -287,16 +276,12 @@ describe('DashboardPage', () => {
     await openCreate(user);
     await user.click(screen.getByRole('button', { name: 'Cancel' }));
 
-    expect(
-      screen.queryByRole('heading', { name: 'Create an event' }),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Create an event' })).not.toBeInTheDocument();
 
     await openCreate(user);
     await user.click(screen.getByRole('button', { name: '' }));
 
-    expect(
-      screen.queryByRole('heading', { name: 'Create an event' }),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Create an event' })).not.toBeInTheDocument();
   });
 
   it('membuat acara baru', async () => {
@@ -308,10 +293,7 @@ describe('DashboardPage', () => {
     await user.click(screen.getByRole('button', { name: /Save event/i }));
 
     await waitFor(() => {
-      expect(api).toHaveBeenCalledWith(
-        '/events',
-        expect.objectContaining({ method: 'POST' }),
-      );
+      expect(api).toHaveBeenCalledWith('/events', expect.objectContaining({ method: 'POST' }));
     });
 
     const call = api.mock.calls.find(
@@ -337,9 +319,7 @@ describe('DashboardPage', () => {
     await openCreate(user);
     submitForm();
 
-    expect(
-      await screen.findByText('Tanggal mulai dan selesai wajib diisi.'),
-    ).toBeInTheDocument();
+    expect(await screen.findByText('Tanggal mulai dan selesai wajib diisi.')).toBeInTheDocument();
   });
 
   it('memvalidasi tanggal selesai yang tidak setelah tanggal mulai', async () => {
@@ -358,9 +338,7 @@ describe('DashboardPage', () => {
     submitForm();
 
     expect(
-      await screen.findByText(
-        'Tanggal selesai harus setelah tanggal mulai.',
-      ),
+      await screen.findByText('Tanggal selesai harus setelah tanggal mulai.'),
     ).toBeInTheDocument();
   });
 
@@ -371,9 +349,7 @@ describe('DashboardPage', () => {
     await screen.findByText('Workshop React');
     await user.click(screen.getByRole('button', { name: 'Edit' }));
 
-    expect(
-      screen.getByRole('heading', { name: 'Edit event' }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Edit event' })).toBeInTheDocument();
 
     expect(screen.getByLabelText('Judul acara')).toHaveValue('Workshop React');
     expect(screen.getByLabelText('Lokasi')).toHaveValue('Aula Kampus');
@@ -391,10 +367,7 @@ describe('DashboardPage', () => {
     await user.click(screen.getByRole('button', { name: /Save event/i }));
 
     await waitFor(() => {
-      expect(api).toHaveBeenCalledWith(
-        '/events/7',
-        expect.objectContaining({ method: 'PATCH' }),
-      );
+      expect(api).toHaveBeenCalledWith('/events/7', expect.objectContaining({ method: 'PATCH' }));
     });
   });
 
@@ -422,9 +395,7 @@ describe('DashboardPage', () => {
     await user.type(screen.getByLabelText('Judul acara'), 'Workshop Update');
     await user.click(screen.getByRole('button', { name: /Save event/i }));
 
-    expect(
-      await screen.findByText('Gagal memperbarui acara'),
-    ).toBeInTheDocument();
+    expect(await screen.findByText('Gagal memperbarui acara')).toBeInTheDocument();
   });
 
   it('membatalkan penghapusan ketika confirm bernilai false', async () => {
@@ -476,9 +447,7 @@ describe('DashboardPage', () => {
     await screen.findByText('Workshop React');
     await user.click(screen.getByRole('button', { name: 'Delete' }));
 
-    expect(
-      await screen.findByText('Gagal menghapus acara'),
-    ).toBeInTheDocument();
+    expect(await screen.findByText('Gagal menghapus acara')).toBeInTheDocument();
   });
 
   it('menampilkan error ketika pembuatan acara gagal', async () => {
@@ -502,9 +471,7 @@ describe('DashboardPage', () => {
     await fillForm(user);
     await user.click(screen.getByRole('button', { name: /Save event/i }));
 
-    expect(
-      await screen.findByText('Gagal menyimpan acara'),
-    ).toBeInTheDocument();
+    expect(await screen.findByText('Gagal menyimpan acara')).toBeInTheDocument();
   });
 
   it('memakai pesan default ketika error penyimpanan tidak punya pesan', async () => {
@@ -528,9 +495,7 @@ describe('DashboardPage', () => {
     await fillForm(user);
     await user.click(screen.getByRole('button', { name: /Save event/i }));
 
-    expect(
-      await screen.findByText('Terjadi kesalahan saat menyimpan acara.'),
-    ).toBeInTheDocument();
+    expect(await screen.findByText('Terjadi kesalahan saat menyimpan acara.')).toBeInTheDocument();
   });
 
   it('membuka form edit untuk acara tanpa tanggal', async () => {
@@ -564,8 +529,6 @@ describe('DashboardPage', () => {
 
     renderPage();
 
-    expect(
-      await screen.findByText('Belum ada acara. Buat acara pertamamu!'),
-    ).toBeInTheDocument();
+    expect(await screen.findByText('Belum ada acara. Buat acara pertamamu!')).toBeInTheDocument();
   });
 });

@@ -10,9 +10,7 @@ vi.mock('../services/api', () => ({
 
 vi.mock('../components/EventCard', () => ({
   default: ({ event }) => (
-    <article data-testid="event-card">
-      {event.title || event.name || `Event ${event.id}`}
-    </article>
+    <article data-testid="event-card">{event.title || event.name || `Event ${event.id}`}</article>
   ),
 }));
 
@@ -59,9 +57,7 @@ describe('HomePage', () => {
 
     renderHomePage();
 
-    expect(
-      await screen.findByText('Belum ada acara yang cocok.'),
-    ).toBeInTheDocument();
+    expect(await screen.findByText('Belum ada acara yang cocok.')).toBeInTheDocument();
     expect(screen.getByText('0 events found')).toBeInTheDocument();
   });
 
@@ -70,9 +66,7 @@ describe('HomePage', () => {
 
     renderHomePage();
 
-    expect(
-      await screen.findByText('Belum dapat memuat acara.'),
-    ).toBeInTheDocument();
+    expect(await screen.findByText('Belum dapat memuat acara.')).toBeInTheDocument();
     expect(screen.getByText('Server tidak tersedia')).toBeInTheDocument();
   });
 
@@ -84,10 +78,7 @@ describe('HomePage', () => {
 
     await screen.findByText('Belum ada acara yang cocok.');
 
-    await user.type(
-      screen.getByPlaceholderText('Cari acara, seminar, workshop...'),
-      '  seminar  ',
-    );
+    await user.type(screen.getByPlaceholderText('Cari acara, seminar, workshop...'), '  seminar  ');
 
     await waitFor(() => {
       expect(api).toHaveBeenLastCalledWith('/events?q=seminar');
@@ -116,16 +107,11 @@ describe('HomePage', () => {
 
     await screen.findByText('Belum ada acara yang cocok.');
 
-    await user.type(
-      screen.getByPlaceholderText('Cari acara, seminar, workshop...'),
-      'React',
-    );
+    await user.type(screen.getByPlaceholderText('Cari acara, seminar, workshop...'), 'React');
     await user.click(screen.getByRole('button', { name: 'Workshop' }));
 
     await waitFor(() => {
-      expect(api).toHaveBeenLastCalledWith(
-        '/events?q=React&category=Workshop',
-      );
+      expect(api).toHaveBeenLastCalledWith('/events?q=React&category=Workshop');
     });
   });
 
@@ -153,9 +139,7 @@ describe('HomePage', () => {
 
     renderHomePage();
 
-    expect(
-      await screen.findByText('Belum ada acara yang cocok.'),
-    ).toBeInTheDocument();
+    expect(await screen.findByText('Belum ada acara yang cocok.')).toBeInTheDocument();
     expect(screen.getByText('0 events found')).toBeInTheDocument();
   });
 });

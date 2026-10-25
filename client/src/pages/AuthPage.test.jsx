@@ -21,22 +21,12 @@ function LocationDisplay() {
   );
 }
 
-function renderAuth({
-  mode = 'login',
-  initialEntry = '/login',
-  onAuthChange = vi.fn(),
-} = {}) {
+function renderAuth({ mode = 'login', initialEntry = '/login', onAuthChange = vi.fn() } = {}) {
   render(
     <MemoryRouter initialEntries={[initialEntry]}>
       <Routes>
-        <Route
-          path="/login"
-          element={<AuthPage mode={mode} onAuthChange={onAuthChange} />}
-        />
-        <Route
-          path="/register"
-          element={<AuthPage mode={mode} onAuthChange={onAuthChange} />}
-        />
+        <Route path="/login" element={<AuthPage mode={mode} onAuthChange={onAuthChange} />} />
+        <Route path="/register" element={<AuthPage mode={mode} onAuthChange={onAuthChange} />} />
         <Route path="/dashboard" element={<LocationDisplay />} />
         <Route path="/" element={<LocationDisplay />} />
         <Route path="/events/:id" element={<LocationDisplay />} />
@@ -56,12 +46,22 @@ describe('AuthPage', () => {
     cleanup();
   });
 
+  it('menolak input tidak valid di sisi klien tanpa memanggil API', async () => {
+    const user = userEvent.setup();
+    renderAuth();
+
+    await user.type(document.getElementById('username'), 'bukan-email');
+    await user.type(document.getElementById('password'), 'password123');
+    await user.click(screen.getByRole('button', { name: 'Sign in' }));
+
+    expect(await screen.findByText('Format email tidak valid.')).toBeInTheDocument();
+    expect(api).not.toHaveBeenCalled();
+  });
+
   it('menampilkan halaman login dan pilihan akun demo', () => {
     renderAuth();
 
-    expect(
-      screen.getByRole('heading', { name: 'Good to see you.' }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Good to see you.' })).toBeInTheDocument();
 
     expect(screen.getByLabelText('Pilih jenis akun')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Mahasiswa/i })).toBeInTheDocument();
@@ -76,9 +76,7 @@ describe('AuthPage', () => {
 
     await user.click(screen.getByRole('button', { name: /Mahasiswa/i }));
 
-    expect(screen.getByLabelText('Email kampus')).toHaveValue(
-      'student@campuspulse.local',
-    );
+    expect(screen.getByLabelText('Email kampus')).toHaveValue('student@campuspulse.local');
     expect(screen.getByLabelText('Password')).toHaveValue('CampusPulse123!');
   });
 
@@ -88,9 +86,7 @@ describe('AuthPage', () => {
 
     await user.click(screen.getByRole('button', { name: /Organizer/i }));
 
-    expect(screen.getByLabelText('Email kampus')).toHaveValue(
-      'organizer@campuspulse.local',
-    );
+    expect(screen.getByLabelText('Email kampus')).toHaveValue('organizer@campuspulse.local');
     expect(screen.getByLabelText('Password')).toHaveValue('CampusPulse123!');
   });
 
@@ -100,9 +96,7 @@ describe('AuthPage', () => {
 
     await user.click(screen.getByRole('button', { name: /Admin/i }));
 
-    expect(screen.getByLabelText('Email kampus')).toHaveValue(
-      'admin@campuspulse.local',
-    );
+    expect(screen.getByLabelText('Email kampus')).toHaveValue('admin@campuspulse.local');
     expect(screen.getByLabelText('Password')).toHaveValue('CampusPulse123!');
   });
 
@@ -154,9 +148,7 @@ describe('AuthPage', () => {
     await user.type(screen.getByLabelText('Password'), 'password123');
     await user.click(screen.getByRole('button', { name: 'Sign in' }));
 
-    expect(await screen.findByTestId('current-location')).toHaveTextContent(
-      '/dashboard',
-    );
+    expect(await screen.findByTestId('current-location')).toHaveTextContent('/dashboard');
   });
 
   it('mengarahkan organizer ke dashboard', async () => {
@@ -169,16 +161,11 @@ describe('AuthPage', () => {
 
     renderAuth();
 
-    await user.type(
-      screen.getByLabelText('Email kampus'),
-      'organizer@test.com',
-    );
+    await user.type(screen.getByLabelText('Email kampus'), 'organizer@test.com');
     await user.type(screen.getByLabelText('Password'), 'password123');
     await user.click(screen.getByRole('button', { name: 'Sign in' }));
 
-    expect(await screen.findByTestId('current-location')).toHaveTextContent(
-      '/dashboard',
-    );
+    expect(await screen.findByTestId('current-location')).toHaveTextContent('/dashboard');
   });
 
   it('mengutamakan alamat tujuan sebelumnya setelah login', async () => {
@@ -200,9 +187,7 @@ describe('AuthPage', () => {
     await user.type(screen.getByLabelText('Password'), 'password123');
     await user.click(screen.getByRole('button', { name: 'Sign in' }));
 
-    expect(await screen.findByTestId('current-location')).toHaveTextContent(
-      '/events/42',
-    );
+    expect(await screen.findByTestId('current-location')).toHaveTextContent('/events/42');
   });
 
   it('menampilkan error ketika login gagal', async () => {
@@ -216,9 +201,7 @@ describe('AuthPage', () => {
     await user.type(screen.getByLabelText('Password'), 'wrongpass123');
     await user.click(screen.getByRole('button', { name: 'Sign in' }));
 
-    expect(
-      await screen.findByText('Email atau password salah'),
-    ).toBeInTheDocument();
+    expect(await screen.findByText('Email atau password salah')).toBeInTheDocument();
 
     expect(setToken).not.toHaveBeenCalled();
   });
@@ -226,14 +209,10 @@ describe('AuthPage', () => {
   it('menampilkan form registrasi dengan input nama', () => {
     renderAuth({ mode: 'register', initialEntry: '/register' });
 
-    expect(
-      screen.getByRole('heading', { name: 'Create your account' }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Create your account' })).toBeInTheDocument();
 
     expect(screen.getByLabelText('Nama lengkap')).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: 'Create account' }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Create account' })).toBeInTheDocument();
   });
 
   it('registrasi berhasil dan mengarahkan pengguna ke beranda', async () => {
@@ -290,9 +269,7 @@ describe('AuthPage', () => {
     await user.type(screen.getByLabelText('Password'), 'password123');
     await user.click(screen.getByRole('button', { name: 'Create account' }));
 
-    expect(
-      await screen.findByText('Email sudah digunakan'),
-    ).toBeInTheDocument();
+    expect(await screen.findByText('Email sudah digunakan')).toBeInTheDocument();
 
     expect(setToken).not.toHaveBeenCalled();
   });
@@ -313,9 +290,7 @@ describe('AuthPage', () => {
     await user.type(screen.getByLabelText('Password'), 'password123');
     await user.click(screen.getByRole('button', { name: 'Sign in' }));
 
-    expect(
-      await screen.findByRole('button', { name: 'Memproses...' }),
-    ).toBeDisabled();
+    expect(await screen.findByRole('button', { name: 'Memproses...' })).toBeDisabled();
 
     resolveRequest({
       token: 'student-token',
@@ -323,9 +298,7 @@ describe('AuthPage', () => {
     });
 
     await waitFor(() => {
-      expect(
-        screen.queryByRole('button', { name: 'Memproses...' }),
-      ).not.toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: 'Memproses...' })).not.toBeInTheDocument();
     });
   });
 });

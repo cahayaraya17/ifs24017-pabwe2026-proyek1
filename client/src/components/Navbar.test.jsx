@@ -37,10 +37,7 @@ describe('Navbar', () => {
   it('menampilkan tombol Sign in untuk pengunjung', () => {
     renderNavbar();
 
-    expect(screen.getByRole('link', { name: /sign in/i })).toHaveAttribute(
-      'href',
-      '/login',
-    );
+    expect(screen.getByRole('link', { name: /sign in/i })).toHaveAttribute('href', '/login');
     expect(screen.queryByRole('button', { name: /logout/i })).not.toBeInTheDocument();
   });
 
@@ -58,10 +55,7 @@ describe('Navbar', () => {
   it('menampilkan Dashboard untuk organizer', () => {
     renderNavbar({ name: 'Sari', role: 'organizer' });
 
-    expect(screen.getByRole('link', { name: /dashboard/i })).toHaveAttribute(
-      'href',
-      '/dashboard',
-    );
+    expect(screen.getByRole('link', { name: /dashboard/i })).toHaveAttribute('href', '/dashboard');
   });
 
   it('menampilkan Dashboard untuk admin', () => {

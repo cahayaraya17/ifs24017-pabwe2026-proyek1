@@ -124,7 +124,9 @@ describe('App', () => {
 
     renderApp('/my-registrations');
 
-    expect(await screen.findByRole('heading', { name: 'My Registrations Page' })).toBeInTheDocument();
+    expect(
+      await screen.findByRole('heading', { name: 'My Registrations Page' }),
+    ).toBeInTheDocument();
   });
 
   it('mengarahkan user yang sudah login dari halaman login ke halaman utama', async () => {
