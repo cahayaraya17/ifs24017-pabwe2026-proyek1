@@ -1,15 +1,10 @@
-import { useState } from 'react';
 import { ArrowLeft, LockKeyhole, Mail, UserRound } from 'lucide-react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import AuthArt from '../components/auth/AuthArt';
 import AuthField from '../components/auth/AuthField';
 import RolePicker from '../components/auth/RolePicker';
-import { DEMO_EMAILS, DEMO_PASSWORD } from '../constants/demoAccounts';
-import { MANAGER_ROLES, ROLES } from '../constants/roles';
 import { ROUTES } from '../constants/routes';
-import { setToken } from '../services/api';
-import { authenticate } from '../services/authService';
-import { validateAuthForm } from '../utils/validators';
+import { useAuthForm } from '../hooks/useAuthForm';
 
 const COPY = {
   login: {
@@ -33,52 +28,17 @@ const COPY = {
 };
 
 export default function AuthPage({ mode, onAuthChange }) {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [selectedRole, setSelectedRole] = useState(ROLES.STUDENT);
-  const [error, setError] = useState('');
-  const [busy, setBusy] = useState(false);
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const isRegister = mode === 'register';
+  const {
+    isRegister,
+    values,
+    selectedRole,
+    error,
+    busy,
+    bindField,
+    chooseDemoAccount,
+    handleSubmit,
+  } = useAuthForm({ mode, onAuthChange });
   const copy = COPY[isRegister ? 'register' : 'login'];
-
-  function chooseDemoAccount(role) {
-    setSelectedRole(role);
-    setEmail(DEMO_EMAILS[role]);
-    setPassword(DEMO_PASSWORD);
-  }
-
-  function getRedirectPath(user) {
-    if (location.state?.from) return location.state.from;
-    return MANAGER_ROLES.includes(user.role) ? ROUTES.DASHBOARD : ROUTES.HOME;
-  }
-
-  async function handleSubmit(event) {
-    event.preventDefault();
-    setError('');
-
-    const validationError = validateAuthForm({ name, email, password }, isRegister);
-    if (validationError) {
-      setError(validationError);
-      return;
-    }
-
-    setBusy(true);
-
-    try {
-      const data = await authenticate(mode, { name, email, password });
-      setToken(data.token);
-      onAuthChange(data.user);
-      navigate(getRedirectPath(data.user));
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setBusy(false);
-    }
-  }
 
   return (
     <main className="auth-page container">
@@ -107,8 +67,8 @@ export default function AuthPage({ mode, onAuthChange }) {
                 required
                 minLength={2}
                 maxLength={100}
-                value={name}
-                onChange={(event) => setName(event.target.value)}
+                value={values.name}
+                onChange={bindField('name')}
                 placeholder="Nama kamu"
               />
             )}
@@ -124,8 +84,8 @@ export default function AuthPage({ mode, onAuthChange }) {
               required
               type="text"
               maxLength={190}
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              value={values.email}
+              onChange={bindField('email')}
               placeholder="nama@kampus.ac.id"
             />
             <AuthField
@@ -138,8 +98,8 @@ export default function AuthPage({ mode, onAuthChange }) {
               minLength={8}
               maxLength={100}
               type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
+              value={values.password}
+              onChange={bindField('password')}
               placeholder="Minimal 8 karakter"
             />
             {error && (

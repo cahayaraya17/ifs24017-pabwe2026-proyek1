@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { CAMPUS_CENTER, CAMPUS_PLACES, DEFAULT_ZOOM, SELECTED_ZOOM } from '../../data/campusPlaces';
+import { defaultMarkerIcon } from '../../utils/leafletIcon';
 import { googleMapsUrlFor } from '../../utils/maps';
 import SelectedPlaceCard from './SelectedPlaceCard';
 
@@ -36,6 +37,7 @@ export default function CampusMap({ selected, onSelect, onClearSelection }) {
           <Marker
             key={place.id}
             position={[place.lat, place.lng]}
+            icon={defaultMarkerIcon}
             eventHandlers={{ click: () => onSelect(place) }}
           >
             <Popup>

@@ -279,7 +279,7 @@ describe('DashboardPage', () => {
     expect(screen.queryByRole('heading', { name: 'Create an event' })).not.toBeInTheDocument();
 
     await openCreate(user);
-    await user.click(screen.getByRole('button', { name: '' }));
+    await user.click(screen.getByRole('button', { name: 'Tutup form' }));
 
     expect(screen.queryByRole('heading', { name: 'Create an event' })).not.toBeInTheDocument();
   });

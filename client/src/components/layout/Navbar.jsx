@@ -10,7 +10,7 @@ import {
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { MANAGER_ROLES } from '../../constants/roles';
 import { ROUTES } from '../../constants/routes';
-import { setToken } from '../../services/api';
+import { signOut } from '../../services/authService';
 
 function UserMenu({ user, onLogout }) {
   return (
@@ -31,7 +31,7 @@ export default function Navbar({ user, onAuthChange }) {
   const isManager = user && MANAGER_ROLES.includes(user.role);
 
   function logout() {
-    setToken(null);
+    signOut();
     onAuthChange(null);
     navigate(ROUTES.HOME);
   }

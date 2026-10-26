@@ -1,0 +1,6 @@
+projectKey=ifs24017-pabwe2026-proyek1
+serverUrl=https://sonarqube.delcom.org
+serverVersion=25.12.0.117093
+dashboardUrl=https://sonarqube.delcom.org/dashboard?id=ifs24017-pabwe2026-proyek1
+ceTaskId=c3b40471-6f85-4e90-a4eb-db5026248149
+ceTaskUrl=https://sonarqube.delcom.org/api/ce/task?id=c3b40471-6f85-4e90-a4eb-db5026248149

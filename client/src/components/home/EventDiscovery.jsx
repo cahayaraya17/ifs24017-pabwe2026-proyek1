@@ -54,7 +54,7 @@ export default function EventDiscovery({
         <div>
           <div className="eyebrow">FIND YOUR NEXT EXPERIENCE</div>
           <h2>
-            What's happening <span className="gradient-text">on campus?</span>
+            What&apos;s happening <span className="gradient-text">on campus?</span>
           </h2>
           <p className="muted">Satu tempat untuk menemukan hal-hal menarik di kampusmu.</p>
         </div>

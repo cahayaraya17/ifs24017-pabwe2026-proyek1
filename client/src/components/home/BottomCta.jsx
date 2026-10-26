@@ -8,7 +8,7 @@ export default function BottomCta() {
       <div>
         <span className="eyebrow">YOUR CAMPUS JOURNEY STARTS HERE</span>
         <h2>
-          Don't just attend college.
+          Don&apos;t just attend college.
           <br />
           <span className="gradient-text">Experience it.</span>
         </h2>

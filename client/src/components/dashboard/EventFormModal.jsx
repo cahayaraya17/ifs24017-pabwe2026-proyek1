@@ -1,5 +1,7 @@
+import { useId } from 'react';
 import { Save, X } from 'lucide-react';
 import { EVENT_STATUS_OPTIONS } from '../../constants/events';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
 
 export default function EventFormModal({
   form,
@@ -10,26 +12,42 @@ export default function EventFormModal({
   onSubmit,
   onClose,
 }) {
+  const titleId = useId();
+  const dialogRef = useFocusTrap(onClose);
+
   /** Membuat handler onChange untuk satu field form. */
   const bind = (field) => (event) => onChange({ ...form, [field]: event.target.value });
 
   return (
     <div className="modal-backdrop">
-      <form className="event-form-panel" onSubmit={onSubmit}>
+      <form
+        ref={dialogRef}
+        className="event-form-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        onSubmit={onSubmit}
+      >
         <div className="form-panel-heading">
           <div>
             <span className="eyebrow">EVENT MANAGEMENT</span>
-            <h2>{isEditing ? 'Edit event' : 'Create an event'}</h2>
+            <h2 id={titleId}>{isEditing ? 'Edit event' : 'Create an event'}</h2>
           </div>
-          <button type="button" className="icon-button" onClick={onClose}>
-            <X />
+          <button type="button" className="icon-button" aria-label="Tutup form" onClick={onClose}>
+            <X aria-hidden="true" />
           </button>
         </div>
 
         <div className="form-grid">
           <label className="wide-field">
             Judul acara
-            <input required minLength={3} value={form.title} onChange={bind('title')} />
+            <input
+              data-autofocus
+              required
+              minLength={3}
+              value={form.title}
+              onChange={bind('title')}
+            />
           </label>
 
           <label>

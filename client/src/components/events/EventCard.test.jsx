@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { render, screen, cleanup, within } from '@testing-library/react';
+import { screen, cleanup, within } from '@testing-library/react';
 import { afterEach } from 'vitest';
 import { renderWithProviders } from '../../test-utils';
 import EventCard from './EventCard';
